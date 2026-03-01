@@ -9,19 +9,19 @@
           </div>
           <span class="text-white font-bold tracking-tight">SalesDesk<span class="text-brand-accent-light">&nbsp;AI</span></span>
         </a>
-        <p class="text-sm text-slate-500 leading-relaxed mb-3">{{ c.footer.description }}</p>
-        <p class="text-xs text-slate-600">{{ c.footer.powered_by }}</p>
+        <p class="text-sm text-neutral-500 leading-relaxed mb-3">{{ c.footer.description }}</p>
+        <p class="text-xs text-neutral-600">{{ c.footer.powered_by }}</p>
       </div>
 
       <!-- Navigation -->
       <div>
         <h4 class="text-white font-semibold text-sm mb-4">{{ c.footer.nav_title }}</h4>
         <ul class="space-y-2.5">
-          <li><a href="/{{ lang }}/solutions/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.solutions }}</a></li>
-          <li><a href="/{{ lang }}/pricing/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.pricing }}</a></li>
-          <li><a href="/{{ lang }}/demo/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.demo }}</a></li>
-          <li><a href="/{{ lang }}/blog/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.blog }}</a></li>
-          <li><a href="/{{ lang }}/about/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.about }}</a></li>
+          <li><a href="/{{ lang }}/solutions/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.nav.solutions }}</a></li>
+          <li><a href="/{{ lang }}/pricing/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.nav.pricing }}</a></li>
+          <li><a href="/{{ lang }}/demo/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.nav.demo }}</a></li>
+          <li><a href="/{{ lang }}/blog/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.nav.blog }}</a></li>
+          <li><a href="/{{ lang }}/about/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.nav.about }}</a></li>
         </ul>
       </div>
 
@@ -29,8 +29,8 @@
       <div>
         <h4 class="text-white font-semibold text-sm mb-4">{{ c.footer.legal_title }}</h4>
         <ul class="space-y-2.5">
-          <li><a href="/{{ lang }}/privacy/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.footer.privacy }}</a></li>
-          <li><a href="/{{ lang }}/terms/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.footer.terms }}</a></li>
+          <li><a href="/{{ lang }}/privacy/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.footer.privacy }}</a></li>
+          <li><a href="/{{ lang }}/terms/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.footer.terms }}</a></li>
         </ul>
       </div>
 
@@ -38,15 +38,15 @@
       <div>
         <h4 class="text-white font-semibold text-sm mb-4">{{ c.footer.contact_title }}</h4>
         <ul class="space-y-2.5">
-          <li><a href="/{{ lang }}/contact/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.contact }}</a></li>
+          <li><a href="/{{ lang }}/contact/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.nav.contact }}</a></li>
           {% if telegram_url %}
-          <li><a href="{{ telegram_url }}" target="_blank" rel="noopener" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors" data-track="tg_start">Telegram</a></li>
+          <li><a href="{{ telegram_url }}" target="_blank" rel="noopener" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150" data-track="tg_start">Telegram</a></li>
           {% endif %}
         </ul>
       </div>
     </div>
 
     <div class="glow-line mt-10 mb-6"></div>
-    <p class="text-xs text-slate-600 text-center">&copy; {{ current_year }} {{ c.footer.copyright }}</p>
+    <p class="text-xs text-neutral-600 text-center">&copy; {{ current_year }} {{ c.footer.copyright }}</p>
   </div>
 </footer>
