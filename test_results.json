@@ -1,0 +1,392 @@
+{
+  "total_tests": 77,
+  "passed_tests": 76,
+  "success_rate": 98.7012987012987,
+  "results": [
+    {
+      "test": "GET / \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/solutions/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/solutions/beauty/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/solutions/education/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/pricing/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/demo/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/blog/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/blog/ai-sales-bot-chto-eto/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/about/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/contact/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/privacy/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/terms/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/cases/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/solutions/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/solutions/beauty/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/solutions/education/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/pricing/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/demo/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/blog/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/blog/ai-sales-bot-chto-eto/ \u2192 200",
+      "passed": false,
+      "details": "Got 404"
+    },
+    {
+      "test": "GET /de/about/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/contact/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/privacy/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/terms/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/cases/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /fr/ \u2192 404",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /en/ \u2192 404",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/nonexistent/ \u2192 404",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/nonexistent/ \u2192 404",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/solutions/nonexistent/ \u2192 404",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /random-page/ \u2192 404",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /sitemap.xml \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Sitemap XML structure",
+      "passed": true,
+      "details": "39 URLs, 114 hreflang links"
+    },
+    {
+      "test": "Sitemap contains /",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Sitemap contains /ru/",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Sitemap contains /de/",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Sitemap contains /ru/pricing/",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Sitemap contains /de/pricing/",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /robots.txt \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Robots.txt has User-agent",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Robots.txt has Allow directive",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Robots.txt has Sitemap URL",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "POST /api/lead valid payload \u2192 200",
+      "passed": true,
+      "details": "Status: 200, Response: {\"status\":\"ok\",\"message\":\"Lead received\"}"
+    },
+    {
+      "test": "POST /api/lead honeypot \u2192 200 (ignored)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "POST /api/lead missing fields \u2192 400",
+      "passed": true,
+      "details": "Got 400"
+    },
+    {
+      "test": "GET /api/health \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/ru/ has og:image meta tag",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/ru/ has canonical link",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/ru/ has hreflang links",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/de/ has og:image meta tag",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/de/ has canonical link",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/de/ has hreflang links",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/pricing/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/ru/pricing/ has og:image meta tag",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/ru/pricing/ has canonical link",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/ru/pricing/ has hreflang links",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/contact/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/de/contact/ has og:image meta tag",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/de/contact/ has canonical link",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "/de/contact/ has hreflang links",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "DE navigation shows 'L\u00f6sungen'",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "DE navigation shows '\u00dcber uns'",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "DE navigation shows 'Preise'",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /de/contact/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "DE consent banner shows 'DSGVO'",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Home page has FAQPage schema",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Home page has SoftwareApplication schema",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Home page has Organization schema",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Home page has WebSite schema",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "GET /ru/blog/ai-sales-bot-chto-eto/ \u2192 200",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "test": "Blog post has Article schema",
+      "passed": true,
+      "details": ""
+    }
+  ]
+}
