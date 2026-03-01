@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SalesDesk AI — Choose Language</title>
+  <meta name="description" content="SalesDesk AI — AI Sales Bot 24/7. Choose your language.">
+  <link rel="alternate" hreflang="ru" href="{{ site_url }}/ru/">
+  <link rel="alternate" hreflang="de" href="{{ site_url }}/de/">
+  <link rel="alternate" hreflang="x-default" href="{{ site_url }}/">
+  <link rel="canonical" href="{{ site_url }}/">
+  <script type="application/ld+json">{{ org_schema|tojson }}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="min-h-screen flex items-center justify-center bg-brand-bg">
+  <div class="text-center px-6">
+    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-teal-400 flex items-center justify-center mx-auto mb-8">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#060B18" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-3" data-testid="chooser-title">SalesDesk <span class="gradient-text">AI</span></h1>
+    <p class="text-slate-400 mb-10">AI Sales Bot 24/7</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center" data-testid="lang-chooser-links">
+      <a href="/ru/" class="btn-primary min-w-[180px] text-base" data-testid="lang-ru">
+        <span>&#127479;&#127482;</span> Русский
+      </a>
+      <a href="/de/" class="btn-secondary min-w-[180px] text-base" data-testid="lang-de">
+        <span>&#127465;&#127466;</span> Deutsch
+      </a>
+    </div>
+  </div>
+</body>
+</html>
