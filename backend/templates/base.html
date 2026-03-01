@@ -18,9 +18,13 @@
   <meta property="og:url" content="{{ canonical }}">
   <meta property="og:site_name" content="SalesDesk AI">
   <meta property="og:locale" content="{{ 'ru_RU' if lang == 'ru' else 'de_DE' }}">
+  <meta property="og:image" content="{{ og_image }}">
+  <meta property="og:image:width" content="1536">
+  <meta property="og:image:height" content="1024">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ meta_title }}">
   <meta name="twitter:description" content="{{ meta_desc }}">
+  <meta name="twitter:image" content="{{ og_image }}">
 
   <!-- Schema JSON-LD -->
   {% for schema in schemas %}
@@ -35,6 +39,21 @@
   <!-- CSS -->
   <link rel="stylesheet" href="/static/css/style.css">
 
+  <style>
+    :root {
+      --c-bg: #070707;
+      --c-surface: #121212;
+      --c-card: #16161D;
+      --c-border: #2A2A2A;
+      --c-accent: #C47C3C;
+      --c-accent-light: #E2A76F;
+      --c-text: #FAFAFA;
+      --c-muted: #A3A3A3;
+    }
+    .fluid-h1 { font-size: clamp(2.25rem, 5vw, 3.75rem); line-height: 1.1; }
+    .fluid-h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.2; }
+  </style>
+
   {% block head_extra %}{% endblock %}
 </head>
 <body class="min-h-screen flex flex-col">
@@ -42,14 +61,14 @@
 
   {% if breadcrumbs and breadcrumbs|length > 0 %}
   <nav aria-label="Breadcrumb" class="section-container pt-4">
-    <ol class="flex items-center gap-2 text-sm text-slate-500">
+    <ol class="flex items-center gap-2 text-sm text-neutral-500">
       {% for bc in breadcrumbs %}
       <li class="flex items-center gap-2">
         {% if not loop.last %}
-        <a href="{{ bc.url }}" class="hover:text-brand-accent-light transition-colors">{{ bc.name }}</a>
-        <span class="text-slate-600">/</span>
+        <a href="{{ bc.url }}" class="hover:text-brand-accent transition-colors">{{ bc.name }}</a>
+        <span class="text-neutral-600">/</span>
         {% else %}
-        <span class="text-slate-400">{{ bc.name }}</span>
+        <span class="text-neutral-400">{{ bc.name }}</span>
         {% endif %}
       </li>
       {% endfor %}
