@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-brand-bg text-slate-300 font-sans antialiased;
+  }
+  ::selection {
+    @apply bg-cyan-500/30 text-white;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-cyan-500 text-brand-bg font-semibold rounded-lg transition-all duration-200 hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/50;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-cyan-500/30 text-cyan-400 font-medium rounded-lg transition-all duration-200 hover:bg-cyan-500/10 hover:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50;
+  }
+  .card {
+    @apply bg-brand-card border border-brand-border rounded-xl p-6 transition-all duration-200;
+  }
+  .card-hover {
+    @apply card hover:border-cyan-500/30 hover:shadow-lg hover:shadow-cyan-500/5;
+  }
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .section-padding {
+    @apply py-16 sm:py-24;
+  }
+  .gradient-text {
+    @apply bg-gradient-to-r from-cyan-400 to-teal-300 bg-clip-text text-transparent;
+  }
+  .glow-line {
+    @apply h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent;
+  }
+}
