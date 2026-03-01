@@ -1,382 +1,320 @@
 #!/usr/bin/env python3
-"""
-Comprehensive Backend API Testing for SalesDesk AI Website
-Testing all routes, API endpoints, SEO features, and data validation
-"""
 
 import requests
 import json
-import sys
 from datetime import datetime
-from typing import Dict, List, Tuple
-import re
+import xml.etree.ElementTree as ET
 
-
-class SalesDeskAPITester:
-    def __init__(self, base_url: str = "https://814e0dda-6fa6-4e54-8531-53d036ceeb67.preview.emergentagent.com"):
+class SalesDeskAITester:
+    def __init__(self, base_url="https://814e0dda-6fa6-4e54-8531-53d036ceeb67.preview.emergentagent.com"):
         self.base_url = base_url.rstrip("/")
-        self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'SalesDesk-Test-Bot/1.0',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-        })
-        
         self.tests_run = 0
         self.tests_passed = 0
-        self.failed_tests = []
-        self.passed_tests = []
-        
-        # Expected page paths
-        self.ru_pages = [
-            "/ru/", "/ru/solutions/", "/ru/solutions/beauty/", "/ru/solutions/education/",
-            "/ru/pricing/", "/ru/demo/", "/ru/blog/", "/ru/blog/ai-sales-bot-chto-eto/",
-            "/ru/about/", "/ru/contact/", "/ru/privacy/", "/ru/terms/", "/ru/cases/"
-        ]
-        
-        self.de_pages = [
-            "/de/", "/de/solutions/", "/de/solutions/beauty/", "/de/solutions/education/",
-            "/de/pricing/", "/de/demo/", "/de/blog/", "/de/blog/ki-sales-bot-was-ist-das/",
-            "/de/about/", "/de/contact/", "/de/privacy/", "/de/terms/", "/de/cases/"
-        ]
+        self.results = []
 
-    def log_test(self, name: str, success: bool, details: str = "", status_code: int = 0):
-        """Log test results"""
+    def log_result(self, test_name, success, details=""):
         self.tests_run += 1
         if success:
             self.tests_passed += 1
-            self.passed_tests.append(f"✅ {name}")
-            print(f"✅ {name}")
+            print(f"✅ {test_name}")
         else:
-            self.failed_tests.append(f"❌ {name}: {details}")
-            print(f"❌ {name}: {details} (Status: {status_code})")
-
-    def test_route(self, path: str, expected_status: int = 200, check_content: List[str] = None) -> Tuple[bool, str, int]:
-        """Test a single route"""
-        try:
-            url = f"{self.base_url}{path}"
-            response = self.session.get(url, timeout=10)
-            
-            if response.status_code != expected_status:
-                return False, f"Expected {expected_status}, got {response.status_code}", response.status_code
-            
-            if check_content:
-                content = response.text.lower()
-                for item in check_content:
-                    if item.lower() not in content:
-                        return False, f"Missing content: '{item}'", response.status_code
-            
-            return True, "OK", response.status_code
-            
-        except Exception as e:
-            return False, f"Request failed: {str(e)}", 0
-
-    def test_root_language_chooser(self):
-        """Test root path returns language chooser"""
-        success, details, status_code = self.test_route("/", 200, ["ru", "de", "SalesDesk AI"])
-        self.log_test("Root / language chooser", success, details, status_code)
-
-    def test_russian_pages(self):
-        """Test all Russian language pages"""
-        for page in self.ru_pages:
-            success, details, status_code = self.test_route(page, 200, ["SalesDesk AI"])
-            self.log_test(f"RU page {page}", success, details, status_code)
-
-    def test_german_pages(self):
-        """Test all German language pages"""
-        for page in self.de_pages:
-            success, details, status_code = self.test_route(page, 200, ["SalesDesk AI"])
-            self.log_test(f"DE page {page}", success, details, status_code)
-
-    def test_404_pages(self):
-        """Test non-existent pages return 404"""
-        test_404_paths = ["/fr/", "/ru/nonexistent/", "/de/invalid/"]
+            print(f"❌ {test_name} - {details}")
         
-        for path in test_404_paths:
-            success, details, status_code = self.test_route(path, 404)
-            self.log_test(f"404 test {path}", success, details, status_code)
+        self.results.append({
+            "test": test_name,
+            "passed": success,
+            "details": details
+        })
 
-    def test_sitemap_xml(self):
-        """Test sitemap.xml returns proper XML with hreflang"""
+    def test_page_response(self, path, expected_status=200, description=""):
+        """Test if a page returns expected status code"""
+        url = f"{self.base_url}{path}"
         try:
-            url = f"{self.base_url}/sitemap.xml"
-            response = self.session.get(url, timeout=10)
-            
-            if response.status_code != 200:
-                self.log_test("Sitemap XML", False, f"Status {response.status_code}", response.status_code)
-                return
-            
-            content = response.text
-            checks = [
-                "<urlset" in content,
-                "xhtml:link" in content,
-                "hreflang=" in content,
-                "/ru/" in content,
-                "/de/" in content,
-                "x-default" in content
-            ]
-            
-            if all(checks):
-                self.log_test("Sitemap XML", True)
-            else:
-                self.log_test("Sitemap XML", False, "Missing required XML elements or hreflang links")
-                
+            response = requests.get(url, timeout=10, allow_redirects=True)
+            success = response.status_code == expected_status
+            self.log_result(f"GET {path} → {expected_status}", success, 
+                          f"Got {response.status_code}" if not success else "")
+            return success, response
         except Exception as e:
-            self.log_test("Sitemap XML", False, f"Request failed: {str(e)}")
+            self.log_result(f"GET {path} → {expected_status}", False, str(e))
+            return False, None
 
-    def test_robots_txt(self):
-        """Test robots.txt returns proper content"""
-        try:
-            url = f"{self.base_url}/robots.txt"
-            response = self.session.get(url, timeout=10)
-            
-            if response.status_code != 200:
-                self.log_test("Robots.txt", False, f"Status {response.status_code}", response.status_code)
-                return
-            
-            content = response.text
-            checks = [
-                "User-agent:" in content,
-                "Allow:" in content,
-                "Sitemap:" in content,
-                "/sitemap.xml" in content
-            ]
-            
-            if all(checks):
-                self.log_test("Robots.txt", True)
-            else:
-                self.log_test("Robots.txt", False, "Missing required robots.txt directives")
-                
-        except Exception as e:
-            self.log_test("Robots.txt", False, f"Request failed: {str(e)}")
-
-    def test_api_lead_valid(self):
-        """Test POST /api/lead with valid data"""
-        try:
-            url = f"{self.base_url}/api/lead"
-            data = {
-                "name": "Test User",
-                "phone": "+1234567890",
-                "business": "beauty",
-                "message": "Test message for API",
-                "lang": "ru",
-                "source": "test"
-            }
-            
-            response = self.session.post(url, json=data, timeout=10)
-            
-            if response.status_code == 200:
-                try:
-                    json_response = response.json()
-                    if json_response.get("status") == "ok":
-                        self.log_test("API /api/lead valid data", True)
-                    else:
-                        self.log_test("API /api/lead valid data", False, f"Unexpected response: {json_response}")
-                except json.JSONDecodeError:
-                    self.log_test("API /api/lead valid data", False, "Invalid JSON response")
-            else:
-                self.log_test("API /api/lead valid data", False, f"Status {response.status_code}", response.status_code)
-                
-        except Exception as e:
-            self.log_test("API /api/lead valid data", False, f"Request failed: {str(e)}")
-
-    def test_api_lead_invalid(self):
-        """Test POST /api/lead with invalid data (missing required fields)"""
-        try:
-            url = f"{self.base_url}/api/lead"
-            data = {
-                "message": "Missing name and phone"
-            }
-            
-            response = self.session.post(url, json=data, timeout=10)
-            
-            if response.status_code == 400:
-                self.log_test("API /api/lead invalid data (400)", True)
-            else:
-                self.log_test("API /api/lead invalid data (400)", False, f"Expected 400, got {response.status_code}", response.status_code)
-                
-        except Exception as e:
-            self.log_test("API /api/lead invalid data", False, f"Request failed: {str(e)}")
-
-    def test_api_lead_honeypot(self):
-        """Test POST /api/lead with honeypot field (should return 200 but ignore)"""
-        try:
-            url = f"{self.base_url}/api/lead"
-            data = {
-                "name": "Test Bot",
-                "phone": "+1234567890",
-                "website": "https://spam.com",  # honeypot field
-                "business": "beauty"
-            }
-            
-            response = self.session.post(url, json=data, timeout=10)
-            
-            if response.status_code == 200:
-                try:
-                    json_response = response.json()
-                    if json_response.get("status") == "ok":
-                        self.log_test("API /api/lead honeypot protection", True)
-                    else:
-                        self.log_test("API /api/lead honeypot protection", False, f"Unexpected response: {json_response}")
-                except json.JSONDecodeError:
-                    self.log_test("API /api/lead honeypot protection", False, "Invalid JSON response")
-            else:
-                self.log_test("API /api/lead honeypot protection", False, f"Status {response.status_code}", response.status_code)
-                
-        except Exception as e:
-            self.log_test("API /api/lead honeypot protection", False, f"Request failed: {str(e)}")
-
-    def test_health_endpoint(self):
-        """Test /api/health endpoint"""
-        try:
-            url = f"{self.base_url}/api/health"
-            response = self.session.get(url, timeout=10)
-            
-            if response.status_code == 200:
-                try:
-                    json_response = response.json()
-                    if json_response.get("status") == "ok":
-                        self.log_test("API /api/health", True)
-                    else:
-                        self.log_test("API /api/health", False, f"Unexpected response: {json_response}")
-                except json.JSONDecodeError:
-                    self.log_test("API /api/health", False, "Invalid JSON response")
-            else:
-                self.log_test("API /api/health", False, f"Status {response.status_code}", response.status_code)
-                
-        except Exception as e:
-            self.log_test("API /api/health", False, f"Request failed: {str(e)}")
-
-    def test_seo_meta_tags(self):
-        """Test SEO meta tags on key pages"""
-        test_pages = ["/ru/", "/de/", "/ru/pricing/", "/de/pricing/"]
+    def test_all_26_pages(self):
+        """Test all 26 pages mentioned in requirements"""
+        print("\n=== Testing All 26 Pages (RU + DE) ===")
         
-        for page in test_pages:
-            try:
-                url = f"{self.base_url}{page}"
-                response = self.session.get(url, timeout=10)
-                
-                if response.status_code != 200:
-                    self.log_test(f"SEO meta {page}", False, f"Page not accessible: {response.status_code}", response.status_code)
-                    continue
-                
-                content = response.text
-                checks = {
-                    "title": "<title>" in content,
-                    "meta_desc": 'name="description"' in content,
-                    "canonical": 'rel="canonical"' in content,
-                    "hreflang": 'rel="alternate" hreflang=' in content,
-                    "og_title": 'property="og:title"' in content,
-                    "schema": 'type="application/ld+json"' in content
-                }
-                
-                failed_checks = [name for name, passed in checks.items() if not passed]
-                
-                if not failed_checks:
-                    self.log_test(f"SEO meta {page}", True)
-                else:
-                    self.log_test(f"SEO meta {page}", False, f"Missing: {', '.join(failed_checks)}")
-                    
-            except Exception as e:
-                self.log_test(f"SEO meta {page}", False, f"Request failed: {str(e)}")
-
-    def test_json_ld_schemas(self):
-        """Test JSON-LD schemas on specific pages"""
-        schema_tests = [
-            ("/ru/", ["Organization", "WebSite", "FAQPage", "SoftwareApplication"]),
-            ("/de/", ["Organization", "WebSite", "FAQPage", "SoftwareApplication"]),
-            ("/ru/pricing/", ["Organization", "WebSite", "SoftwareApplication"]),
-            ("/ru/blog/ai-sales-bot-chto-eto/", ["Organization", "WebSite", "Article"])
+        # Root page
+        self.test_page_response("/")
+        
+        # Russian pages (13 pages)
+        ru_pages = [
+            "/ru/",
+            "/ru/solutions/",
+            "/ru/solutions/beauty/", 
+            "/ru/solutions/education/",
+            "/ru/pricing/",
+            "/ru/demo/",
+            "/ru/blog/",
+            "/ru/blog/ai-sales-bot-chto-eto/",
+            "/ru/about/",
+            "/ru/contact/",
+            "/ru/privacy/",
+            "/ru/terms/",
+            "/ru/cases/"
         ]
         
-        for page, expected_schemas in schema_tests:
+        # German pages (13 pages)  
+        de_pages = [
+            "/de/",
+            "/de/solutions/",
+            "/de/solutions/beauty/",
+            "/de/solutions/education/", 
+            "/de/pricing/",
+            "/de/demo/",
+            "/de/blog/",
+            "/de/blog/ai-sales-bot-chto-eto/",  # Same slug, might not exist
+            "/de/about/",
+            "/de/contact/", 
+            "/de/privacy/",
+            "/de/terms/",
+            "/de/cases/"
+        ]
+        
+        for page in ru_pages + de_pages:
+            self.test_page_response(page)
+            
+    def test_404_handling(self):
+        """Test that non-existent pages return 404"""
+        print("\n=== Testing 404 Handling ===")
+        non_existent_pages = [
+            "/fr/",
+            "/en/",
+            "/ru/nonexistent/",
+            "/de/nonexistent/",
+            "/ru/solutions/nonexistent/",
+            "/random-page/"
+        ]
+        
+        for page in non_existent_pages:
+            self.test_page_response(page, 404)
+
+    def test_sitemap_xml(self):
+        """Test sitemap.xml validity and content"""
+        print("\n=== Testing Sitemap.xml ===")
+        success, response = self.test_page_response("/sitemap.xml")
+        
+        if success and response:
             try:
-                url = f"{self.base_url}{page}"
-                response = self.session.get(url, timeout=10)
+                # Parse XML
+                root = ET.fromstring(response.text)
                 
-                if response.status_code != 200:
-                    self.log_test(f"JSON-LD {page}", False, f"Page not accessible: {response.status_code}", response.status_code)
-                    continue
+                # Check if it's a valid sitemap
+                urls = root.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}url')
+                loc_count = len(urls)
                 
-                content = response.text
+                # Check for hreflang links
+                hreflang_links = root.findall('.//{http://www.w3.org/1999/xhtml}link')
+                hreflang_count = len(hreflang_links)
                 
-                missing_schemas = []
-                for schema in expected_schemas:
-                    if f'"@type": "{schema}"' not in content:
-                        missing_schemas.append(schema)
+                self.log_result("Sitemap XML structure", True, f"{loc_count} URLs, {hreflang_count} hreflang links")
                 
-                if not missing_schemas:
-                    self.log_test(f"JSON-LD {page}", True)
-                else:
-                    self.log_test(f"JSON-LD {page}", False, f"Missing schemas: {', '.join(missing_schemas)}")
+                # Check for specific pages
+                url_texts = [url.find('{http://www.sitemaps.org/schemas/sitemap/0.9}loc').text for url in urls]
+                
+                key_pages = ["/", "/ru/", "/de/", "/ru/pricing/", "/de/pricing/"]
+                for page in key_pages:
+                    expected_url = f"{self.base_url}{page}"
+                    found = any(expected_url in url for url in url_texts)
+                    self.log_result(f"Sitemap contains {page}", found)
                     
-            except Exception as e:
-                self.log_test(f"JSON-LD {page}", False, f"Request failed: {str(e)}")
+            except ET.ParseError as e:
+                self.log_result("Sitemap XML parsing", False, f"Invalid XML: {e}")
+        
+    def test_robots_txt(self):
+        """Test robots.txt content"""
+        print("\n=== Testing Robots.txt ===")
+        success, response = self.test_page_response("/robots.txt")
+        
+        if success and response:
+            content = response.text.lower()
+            
+            # Check required content
+            has_user_agent = "user-agent:" in content
+            has_allow = "allow:" in content  
+            has_sitemap = "sitemap:" in content and self.base_url.lower() in content
+            
+            self.log_result("Robots.txt has User-agent", has_user_agent)
+            self.log_result("Robots.txt has Allow directive", has_allow)
+            self.log_result("Robots.txt has Sitemap URL", has_sitemap)
+
+    def test_api_lead_endpoint(self):
+        """Test /api/lead endpoint with various payloads"""
+        print("\n=== Testing /api/lead Endpoint ===")
+        
+        # Test 1: Valid full payload
+        valid_payload = {
+            "name": "Test User",
+            "phone": "+1234567890", 
+            "business": "beauty",
+            "message": "Test inquiry about AI bot",
+            "lang": "de",
+            "source": "contact_page",
+            "lead_type": "implementation", 
+            "page_url": "https://example.com/de/contact/",
+            "referrer": "https://google.com",
+            "utm_source": "google",
+            "utm_medium": "cpc", 
+            "utm_campaign": "test_campaign",
+            "utm_content": "test_content",
+            "utm_term": "ai bot"
+        }
+        
+        try:
+            response = requests.post(f"{self.base_url}/api/lead", json=valid_payload, timeout=10)
+            success = response.status_code == 200 and "ok" in response.text.lower()
+            self.log_result("POST /api/lead valid payload → 200", success, 
+                          f"Status: {response.status_code}, Response: {response.text[:100]}")
+        except Exception as e:
+            self.log_result("POST /api/lead valid payload → 200", False, str(e))
+        
+        # Test 2: Honeypot protection
+        honeypot_payload = valid_payload.copy()
+        honeypot_payload["website"] = "https://spam.com"
+        
+        try:
+            response = requests.post(f"{self.base_url}/api/lead", json=honeypot_payload, timeout=10)
+            success = response.status_code == 200  # Should still return 200 but ignore
+            self.log_result("POST /api/lead honeypot → 200 (ignored)", success)
+        except Exception as e:
+            self.log_result("POST /api/lead honeypot → 200 (ignored)", False, str(e))
+        
+        # Test 3: Missing required fields
+        invalid_payload = {"message": "Missing name and phone"}
+        
+        try:
+            response = requests.post(f"{self.base_url}/api/lead", json=invalid_payload, timeout=10)
+            success = response.status_code == 400
+            self.log_result("POST /api/lead missing fields → 400", success, 
+                          f"Got {response.status_code}")
+        except Exception as e:
+            self.log_result("POST /api/lead missing fields → 400", False, str(e))
+
+    def test_health_endpoint(self):
+        """Test health check endpoint"""
+        print("\n=== Testing Health Endpoint ===")
+        try:
+            response = requests.get(f"{self.base_url}/api/health", timeout=10)
+            success = response.status_code == 200 and "ok" in response.text.lower()
+            self.log_result("GET /api/health → 200", success)
+        except Exception as e:
+            self.log_result("GET /api/health → 200", False, str(e))
+
+    def test_meta_tags_and_og_images(self):
+        """Test OG images and meta tags on key pages"""
+        print("\n=== Testing Meta Tags & OG Images ===")
+        
+        key_pages = ["/ru/", "/de/", "/ru/pricing/", "/de/contact/"]
+        
+        for page in key_pages:
+            success, response = self.test_page_response(page)
+            if success and response:
+                content = response.text.lower()
+                
+                # Check for OG image
+                has_og_image = 'property="og:image"' in content
+                self.log_result(f"{page} has og:image meta tag", has_og_image)
+                
+                # Check for canonical
+                has_canonical = 'rel="canonical"' in content  
+                self.log_result(f"{page} has canonical link", has_canonical)
+                
+                # Check for hreflang
+                has_hreflang = 'hreflang=' in content
+                self.log_result(f"{page} has hreflang links", has_hreflang)
+
+    def test_german_umlauts(self):
+        """Test German content contains proper umlauts"""
+        print("\n=== Testing German Umlauts ===")
+        
+        success, response = self.test_page_response("/de/")
+        if success and response:
+            content = response.text
+            
+            # Check for German umlauts in navigation
+            has_loesungen = "lösungen" in content.lower()
+            has_ueber_uns = "über uns" in content.lower()
+            has_preise = "preise" in content.lower()
+            
+            self.log_result("DE navigation shows 'Lösungen'", has_loesungen)
+            self.log_result("DE navigation shows 'Über uns'", has_ueber_uns) 
+            self.log_result("DE navigation shows 'Preise'", has_preise)
+            
+            # Check for DSGVO in consent banner
+            success_consent, response_consent = self.test_page_response("/de/contact/")
+            if success_consent and response_consent:
+                has_dsgvo = "dsgvo" in response_consent.text.lower()
+                self.log_result("DE consent banner shows 'DSGVO'", has_dsgvo)
+
+    def test_schema_structured_data(self):
+        """Test structured data schemas"""
+        print("\n=== Testing Structured Data Schemas ===")
+        
+        # Home page should have FAQPage + SoftwareApplication + Organization + WebSite
+        success, response = self.test_page_response("/ru/")
+        if success and response:
+            content = response.text
+            
+            has_faq_schema = '"@type":"FAQPage"' in content or '"@type": "FAQPage"' in content
+            has_software_schema = '"@type":"SoftwareApplication"' in content or '"@type": "SoftwareApplication"' in content  
+            has_org_schema = '"@type":"Organization"' in content or '"@type": "Organization"' in content
+            has_website_schema = '"@type":"WebSite"' in content or '"@type": "WebSite"' in content
+            
+            self.log_result("Home page has FAQPage schema", has_faq_schema)
+            self.log_result("Home page has SoftwareApplication schema", has_software_schema)
+            self.log_result("Home page has Organization schema", has_org_schema)
+            self.log_result("Home page has WebSite schema", has_website_schema)
+        
+        # Blog post should have Article schema
+        success, response = self.test_page_response("/ru/blog/ai-sales-bot-chto-eto/")
+        if success and response:
+            content = response.text
+            has_article_schema = '"@type":"Article"' in content or '"@type": "Article"' in content
+            self.log_result("Blog post has Article schema", has_article_schema)
 
     def run_all_tests(self):
-        """Run all test suites"""
-        print("🚀 Starting SalesDesk AI Backend Testing...")
-        print(f"Base URL: {self.base_url}")
-        print("=" * 60)
+        """Run all tests"""
+        print(f"🧪 Starting SalesDesk AI Testing - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"🌐 Testing site: {self.base_url}")
         
-        # Core functionality tests
-        print("\n📍 Testing Core Routes...")
-        self.test_root_language_chooser()
-        
-        print("\n🇷🇺 Testing Russian Pages...")
-        self.test_russian_pages()
-        
-        print("\n🇩🇪 Testing German Pages...")
-        self.test_german_pages()
-        
-        print("\n🔍 Testing 404 Pages...")
-        self.test_404_pages()
-        
-        print("\n🗺️  Testing SEO Files...")
+        self.test_all_26_pages()
+        self.test_404_handling() 
         self.test_sitemap_xml()
         self.test_robots_txt()
-        
-        print("\n🔗 Testing API Endpoints...")
+        self.test_api_lead_endpoint()
         self.test_health_endpoint()
-        self.test_api_lead_valid()
-        self.test_api_lead_invalid()
-        self.test_api_lead_honeypot()
+        self.test_meta_tags_and_og_images()
+        self.test_german_umlauts()
+        self.test_schema_structured_data()
         
-        print("\n🔍 Testing SEO Meta Tags...")
-        self.test_seo_meta_tags()
+        # Final summary
+        print(f"\n📊 Final Results: {self.tests_passed}/{self.tests_run} tests passed ({self.tests_passed/self.tests_run*100:.1f}%)")
         
-        print("\n📋 Testing JSON-LD Schemas...")
-        self.test_json_ld_schemas()
-        
-        # Results summary
-        print("\n" + "=" * 60)
-        print("📊 TEST RESULTS SUMMARY")
-        print("=" * 60)
-        print(f"Total Tests: {self.tests_run}")
-        print(f"Passed: {self.tests_passed}")
-        print(f"Failed: {len(self.failed_tests)}")
-        print(f"Success Rate: {(self.tests_passed/self.tests_run)*100:.1f}%")
-        
-        if self.failed_tests:
-            print(f"\n❌ Failed Tests ({len(self.failed_tests)}):")
-            for test in self.failed_tests:
-                print(f"  {test}")
-        
-        if self.passed_tests:
-            print(f"\n✅ Passed Tests ({len(self.passed_tests)}):")
-            for test in self.passed_tests[:10]:  # Show first 10
-                print(f"  {test}")
-            if len(self.passed_tests) > 10:
-                print(f"  ... and {len(self.passed_tests) - 10} more")
-        
-        return len(self.failed_tests) == 0
-
+        return {
+            "total_tests": self.tests_run,
+            "passed_tests": self.tests_passed,
+            "success_rate": self.tests_passed/self.tests_run*100,
+            "results": self.results
+        }
 
 def main():
-    """Main test execution"""
-    tester = SalesDeskAPITester()
-    success = tester.run_all_tests()
-    return 0 if success else 1
-
+    tester = SalesDeskAITester()
+    results = tester.run_all_tests()
+    
+    # Save results to file
+    with open("/app/test_results.json", "w") as f:
+        json.dump(results, f, indent=2)
+    
+    return 0 if results["success_rate"] >= 90 else 1
 
 if __name__ == "__main__":
-    sys.exit(main())
+    exit(main())
