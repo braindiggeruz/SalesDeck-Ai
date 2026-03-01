@@ -49,6 +49,7 @@ leads_col = db["leads"]
 
 # --- Helpers ---
 CURRENT_YEAR = datetime.now().year
+OG_IMAGE = "https://static.prod-images.emergentagent.com/jobs/67cc67eb-339d-478f-b80d-965166ef2672/images/be2cd7748fa9fb8296326ab2a0f80021c6732ecb169e268abae3e21bb978d3c8.png"
 
 SOLUTION_SLUGS_WITH_DETAIL = ["beauty", "education"]
 ALL_SOLUTION_SLUGS = ["beauty", "education", "clinic", "auto", "food", "real-estate", "retail"]
