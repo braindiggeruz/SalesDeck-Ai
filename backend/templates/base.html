@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" data-ga4="{{ ga4_id }}" data-pixel="{{ pixel_id }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ meta_title }}</title>
+  <meta name="description" content="{{ meta_desc }}">
+  <link rel="canonical" href="{{ canonical }}">
+  {% for hl in hreflang_links %}
+  <link rel="alternate" hreflang="{{ hl.lang }}" href="{{ hl.url }}">
+  {% endfor %}
+  <link rel="alternate" hreflang="x-default" href="{{ x_default }}">
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="{{ og_type|default('website') }}">
+  <meta property="og:title" content="{{ meta_title }}">
+  <meta property="og:description" content="{{ meta_desc }}">
+  <meta property="og:url" content="{{ canonical }}">
+  <meta property="og:site_name" content="SalesDesk AI">
+  <meta property="og:locale" content="{{ 'ru_RU' if lang == 'ru' else 'de_DE' }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ meta_title }}">
+  <meta name="twitter:description" content="{{ meta_desc }}">
+
+  <!-- Schema JSON-LD -->
+  {% for schema in schemas %}
+  <script type="application/ld+json">{{ schema|tojson }}</script>
+  {% endfor %}
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col">
+  {% include "partials/header.html" %}
+
+  {% if breadcrumbs and breadcrumbs|length > 0 %}
+  <nav aria-label="Breadcrumb" class="section-container pt-4">
+    <ol class="flex items-center gap-2 text-sm text-slate-500">
+      {% for bc in breadcrumbs %}
+      <li class="flex items-center gap-2">
+        {% if not loop.last %}
+        <a href="{{ bc.url }}" class="hover:text-cyan-400 transition-colors">{{ bc.name }}</a>
+        <span class="text-slate-600">/</span>
+        {% else %}
+        <span class="text-slate-400">{{ bc.name }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </nav>
+  {% endif %}
+
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "partials/footer.html" %}
+  {% include "partials/consent.html" %}
+
+  <!-- Scripts (deferred) -->
+  <script src="/static/js/main.js" defer></script>
+  <script src="/static/js/forms.js" defer></script>
+  <script src="/static/js/consent.js" defer></script>
+  <script src="/static/js/track.js" defer></script>
+  {% block scripts_extra %}{% endblock %}
+</body>
+</html>

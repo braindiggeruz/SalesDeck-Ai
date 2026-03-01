@@ -1,0 +1,56 @@
+<header class="sticky top-0 z-50 backdrop-blur-xl bg-brand-bg/80 border-b border-brand-border">
+  <div class="section-container">
+    <div class="flex items-center justify-between h-16 lg:h-18">
+      <!-- Logo -->
+      <a href="/{{ lang }}/" class="flex items-center gap-2.5 group" data-testid="header-logo">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-teal-400 flex items-center justify-center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#060B18" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <span class="text-white font-bold text-lg tracking-tight">SalesDesk<span class="text-cyan-400">&nbsp;AI</span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-1" data-testid="desktop-nav">
+        {% set nav_items = [
+          ('solutions', c.nav.solutions, '/' ~ lang ~ '/solutions/'),
+          ('pricing', c.nav.pricing, '/' ~ lang ~ '/pricing/'),
+          ('demo', c.nav.demo, '/' ~ lang ~ '/demo/'),
+          ('blog', c.nav.blog, '/' ~ lang ~ '/blog/'),
+          ('about', c.nav.about, '/' ~ lang ~ '/about/'),
+          ('contact', c.nav.contact, '/' ~ lang ~ '/contact/')
+        ] %}
+        {% for key, label, url in nav_items %}
+        <a href="{{ url }}" class="px-3 py-2 text-sm font-medium rounded-md transition-colors {{ 'text-cyan-400 bg-cyan-500/10' if page == key else 'text-slate-400 hover:text-white hover:bg-white/5' }}" data-testid="nav-{{ key }}">{{ label }}</a>
+        {% endfor %}
+      </nav>
+
+      <!-- Right side -->
+      <div class="flex items-center gap-3">
+        <!-- Lang Switcher -->
+        <a href="/{{ c.other_lang }}/{{ lang_path }}" class="px-2.5 py-1.5 text-xs font-semibold text-slate-400 border border-brand-border rounded-md hover:text-white hover:border-slate-500 transition-colors" data-testid="lang-switcher" data-track="lang_switch">
+          {{ c.other_lang_name }}
+        </a>
+        <!-- CTA -->
+        <a href="/{{ lang }}/demo/" class="hidden sm:inline-flex btn-primary !px-5 !py-2.5 text-sm" data-testid="header-cta" data-track="widget_engaged">
+          {{ c.cta.try_demo }}
+        </a>
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" class="lg:hidden p-2 text-slate-400 hover:text-white" aria-expanded="false" aria-label="Menu" data-testid="mobile-menu-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden pb-4 border-t border-brand-border mt-2 pt-3" data-testid="mobile-menu">
+      <div class="flex flex-col gap-1">
+        {% for key, label, url in nav_items %}
+        <a href="{{ url }}" class="px-3 py-2.5 text-sm font-medium rounded-md {{ 'text-cyan-400 bg-cyan-500/10' if page == key else 'text-slate-400 hover:text-white hover:bg-white/5' }}">{{ label }}</a>
+        {% endfor %}
+        <div class="mt-2 pt-2 border-t border-brand-border">
+          <a href="/{{ lang }}/demo/" class="btn-primary w-full text-center text-sm" data-track="widget_engaged">{{ c.cta.try_demo }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

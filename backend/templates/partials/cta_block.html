@@ -1,0 +1,10 @@
+<section class="section-padding bg-brand-surface border-y border-brand-border">
+  <div class="section-container text-center">
+    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">{{ cta_title }}</h2>
+    <p class="text-slate-400 mb-8 max-w-xl mx-auto">{{ cta_desc }}</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="cta-demo" data-track="widget_engaged">{{ c.cta.try_demo }}</a>
+      <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary" data-testid="cta-telegram" data-track="tg_start">{{ c.cta.turnkey }}</a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,12 @@
+<!-- Consent Banner -->
+<div id="consent-banner" class="hidden fixed bottom-0 inset-x-0 z-50 p-4" data-testid="consent-banner">
+  <div class="section-container">
+    <div class="bg-brand-card border border-brand-border rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xl shadow-black/50">
+      <p class="text-sm text-slate-400">{{ c.consent.text }}</p>
+      <div class="flex gap-3 shrink-0">
+        <button id="consent-decline" class="px-4 py-2 text-sm text-slate-500 hover:text-white border border-brand-border rounded-lg transition-colors" data-testid="consent-decline">{{ c.consent.decline }}</button>
+        <button id="consent-accept" class="px-4 py-2 text-sm bg-cyan-500 text-brand-bg font-semibold rounded-lg hover:bg-cyan-400 transition-colors" data-testid="consent-accept">{{ c.consent.accept }}</button>
+      </div>
+    </div>
+  </div>
+</div>
