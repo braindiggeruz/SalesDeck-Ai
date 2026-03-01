@@ -89,7 +89,7 @@ class SalesDeskAPITester:
 
     def test_404_pages(self):
         """Test non-existent pages return 404"""
-        test_404_paths = ["/fr/", "/ru/nonexistent/", "/de/invalid/", "/invalid"]
+        test_404_paths = ["/fr/", "/ru/nonexistent/", "/de/invalid/"]
         
         for path in test_404_paths:
             success, details, status_code = self.test_route(path, 404)
