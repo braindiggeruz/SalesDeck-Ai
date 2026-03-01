@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section-padding">
+  <div class="section-container max-w-4xl">
+    <div class="grid lg:grid-cols-2 gap-12">
+      <!-- Form -->
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-testid="contact-title">{{ c.contact.title }}</h1>
+        <p class="text-slate-400 mb-8">{{ c.contact.desc }}</p>
+
+        <form method="post" action="/api/lead" data-enhanced class="space-y-5" data-testid="contact-form">
+          <!-- Honeypot -->
+          <div class="hidden" aria-hidden="true">
+            <input type="text" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <input type="hidden" name="lang" value="{{ lang }}">
+          <input type="hidden" name="source" value="contact_page">
+
+          <div>
+            <label for="name" class="block text-sm text-slate-400 mb-1.5">{{ c.contact.form_name }}</label>
+            <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-colors" data-testid="contact-input-name">
+          </div>
+          <div>
+            <label for="phone" class="block text-sm text-slate-400 mb-1.5">{{ c.contact.form_phone }}</label>
+            <input type="text" id="phone" name="phone" required class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-colors" data-testid="contact-input-phone">
+          </div>
+          <div>
+            <label for="business" class="block text-sm text-slate-400 mb-1.5">{{ c.contact.form_business }}</label>
+            <select id="business" name="business" class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-colors" data-testid="contact-select-business">
+              <option value="">—</option>
+              {% for slug, sol in c.solutions.items.items() %}
+              <option value="{{ slug }}">{{ sol.name }}</option>
+              {% endfor %}
+              <option value="other">{{ 'Другое' if lang == 'ru' else 'Sonstiges' }}</option>
+            </select>
+          </div>
+          <div>
+            <label for="message" class="block text-sm text-slate-400 mb-1.5">{{ c.contact.form_message }}</label>
+            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-colors resize-none" data-testid="contact-textarea-message"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary w-full" data-testid="contact-submit-btn">{{ c.contact.form_submit }}</button>
+
+          <div data-form-success class="hidden p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-sm" data-testid="contact-success">{{ c.contact.form_success }}</div>
+          <div data-form-error class="hidden p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm" data-testid="contact-error">{{ c.contact.form_error }}</div>
+        </form>
+      </div>
+
+      <!-- Telegram -->
+      <div class="lg:pt-16">
+        <div class="card border-cyan-500/20" data-testid="contact-telegram-block">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-5">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h2 class="text-xl font-bold text-white mb-3">{{ c.contact.telegram_title }}</h2>
+          <p class="text-slate-400 text-sm mb-6">{{ c.contact.telegram_desc }}</p>
+          <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary w-full text-center" data-testid="contact-telegram-btn" data-track="tg_start">{{ c.cta.telegram }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

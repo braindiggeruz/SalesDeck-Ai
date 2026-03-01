@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Hero -->
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-transparent"></div>
+  <div class="section-container relative pt-12 sm:pt-20 pb-12 sm:pb-16">
+    <div class="max-w-3xl">
+      <p class="text-cyan-400 font-semibold text-sm mb-4">{{ c.brand_tagline }} &mdash; {{ sol.name }}</p>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6" data-testid="solution-hero-title">{{ sol.hero_title }}</h1>
+      <p class="text-lg text-slate-400 leading-relaxed mb-8" data-testid="solution-hero-desc">{{ sol.hero_desc }}</p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-cta-demo" data-track="widget_engaged">{{ c.cta.try_demo }}</a>
+        <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary" data-track="tg_start">{{ c.cta.turnkey }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Problems -->
+<section class="section-padding bg-brand-surface border-y border-brand-border">
+  <div class="section-container">
+    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-8" data-testid="solution-problems-title">{{ c.home.problems_title }}</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      {% for problem in sol.problems %}
+      <div class="card flex items-start gap-4" data-testid="solution-problem-{{ loop.index }}">
+        <div class="w-6 h-6 rounded-full bg-red-500/10 flex items-center justify-center shrink-0 mt-0.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+        <p class="text-slate-300 text-sm leading-relaxed">{{ problem }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="section-padding">
+  <div class="section-container">
+    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-10" data-testid="solution-how-title">{{ p.solution_title if p else 'How it works' }}</h2>
+    <div class="grid sm:grid-cols-2 gap-6">
+      {% for step in sol.how_it_works %}
+      <div class="card-hover" data-testid="solution-how-{{ loop.index }}">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold text-sm">{{ loop.index }}</div>
+          <h3 class="text-white font-semibold">{{ step.title }}</h3>
+        </div>
+        <p class="text-slate-400 text-sm leading-relaxed">{{ step.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section class="section-padding bg-brand-surface border-y border-brand-border">
+  <div class="section-container">
+    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-8" data-testid="solution-results-title">{{ sol.result_title }}</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      {% for result in sol.results %}
+      <div class="card flex items-start gap-4" data-testid="solution-result-{{ loop.index }}">
+        <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <p class="text-slate-300 text-sm leading-relaxed">{{ result }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% with cta_title = sol.name, cta_desc = sol.hero_desc[:120] ~ '...' %}
+{% include "partials/cta_block.html" %}
+{% endwith %}
+{% endblock %}

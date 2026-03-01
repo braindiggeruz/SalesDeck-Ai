@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Header -->
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-transparent"></div>
+  <div class="section-container relative pt-12 sm:pt-20 pb-8">
+    <div class="text-center max-w-2xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-testid="pricing-title">{{ c.pricing.title }}</h1>
+      <p class="text-lg text-slate-400">{{ c.pricing.desc }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- Packages -->
+<section class="section-container pb-16">
+  <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5" data-testid="pricing-grid">
+    {% for pkg in c.pricing.packages %}
+    <div class="card flex flex-col relative {{ 'border-cyan-500/40 shadow-lg shadow-cyan-500/5' if pkg.popular else '' }}" data-testid="pricing-card-{{ pkg.id }}">
+      {% if pkg.popular %}
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-cyan-500 text-brand-bg text-xs font-bold rounded-full">Popular</div>
+      {% endif %}
+      <div class="mb-5">
+        <h3 class="text-white font-bold text-xl mb-1">{{ pkg.name }}</h3>
+        <p class="text-slate-500 text-sm">{{ pkg.subtitle }}</p>
+      </div>
+      <div class="mb-6">
+        <span class="text-3xl font-extrabold text-white">{{ pkg.price }}</span>
+        <span class="text-sm text-slate-500 ml-1">{{ pkg.price_note }}</span>
+      </div>
+      <ul class="space-y-3 mb-8 flex-1">
+        {% for feat in pkg.features %}
+        <li class="flex items-start gap-2.5 text-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span class="text-slate-300">{{ feat }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% if pkg.cta_type == 'referral' %}
+      <a href="{{ ref_url }}" target="_blank" rel="noopener" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="referral_click">{{ pkg.cta }}</a>
+      {% else %}
+      <a href="/{{ lang }}/contact/" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="book_demo">{{ pkg.cta }}</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  <p class="text-center text-sm text-slate-500 mt-8" data-testid="pricing-note">{{ c.pricing.note }}</p>
+</section>
+
+<!-- FAQ -->
+{% if c.pricing.faq %}
+<section class="section-padding bg-brand-surface border-y border-brand-border">
+  <div class="section-container max-w-3xl">
+    <h2 class="text-2xl font-bold text-white text-center mb-8" data-testid="pricing-faq-title">{{ c.pricing.faq_title }}</h2>
+    <div class="space-y-3">
+      {% for item in c.pricing.faq %}
+      <div class="card" data-testid="pricing-faq-{{ loop.index }}">
+        <button data-faq-toggle="pfaq-{{ loop.index }}" class="w-full flex items-center justify-between text-left gap-4" aria-expanded="false">
+          <span class="text-white font-medium text-sm">{{ item.q }}</span>
+          <svg data-faq-icon width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-slate-500 shrink-0 transition-transform duration-200"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="pfaq-{{ loop.index }}" class="hidden mt-3 pt-3 border-t border-brand-border">
+          <p class="text-slate-400 text-sm leading-relaxed">{{ item.a }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- SoftwareApplication Schema is in server.py -->
+{% endblock %}
