@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // Parse UTM params from URL
+  function getUtmParams() {
+    var params = new URLSearchParams(window.location.search);
+    return {
+      utm_source: params.get('utm_source') || '',
+      utm_medium: params.get('utm_medium') || '',
+      utm_campaign: params.get('utm_campaign') || '',
+      utm_content: params.get('utm_content') || '',
+      utm_term: params.get('utm_term') || '',
+    };
+  }
+
   var forms = document.querySelectorAll('form[data-enhanced]');
   forms.forEach(function(form) {
     form.addEventListener('submit', function(e) {
@@ -30,6 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (key !== 'website') data[key] = value;
       });
 
+      // Add UTM, referrer, page_url
+      var utm = getUtmParams();
+      Object.keys(utm).forEach(function(k) { data[k] = utm[k]; });
+      data.page_url = window.location.href;
+      data.referrer = document.referrer || '';
+
       fetch(form.action, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -42,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(function() {
         if (successEl) successEl.classList.remove('hidden');
         form.reset();
-        if (typeof track === 'function') track('lead', { source: 'contact_form' });
+        if (typeof track === 'function') track('lead', { source: data.source || 'contact_form' });
       })
       .catch(function() {
         if (errorEl) errorEl.classList.remove('hidden');
