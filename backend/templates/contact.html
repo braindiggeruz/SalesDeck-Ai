@@ -5,7 +5,7 @@
     <div class="grid lg:grid-cols-2 gap-12">
       <!-- Form -->
       <div>
-        <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-testid="contact-title">{{ c.contact.title }}</h1>
+        <h1 class="fluid-h2 font-bold text-white mb-4" data-testid="contact-title">{{ c.contact.title }}</h1>
         <p class="text-neutral-400 mb-8">{{ c.contact.desc }}</p>
 
         <form method="post" action="/api/lead" data-enhanced class="space-y-5" data-testid="contact-form">
@@ -15,18 +15,19 @@
           </div>
           <input type="hidden" name="lang" value="{{ lang }}">
           <input type="hidden" name="source" value="contact_page">
+          <input type="hidden" name="lead_type" value="implementation">
 
           <div>
-            <label for="name" class="block text-sm text-neutral-400 mb-1.5">{{ c.contact.form_name }}</label>
-            <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-neutral-600 focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors" data-testid="contact-input-name">
+            <label for="name" class="block text-sm text-neutral-400 mb-1.5">{{ c.contact.form_name }} *</label>
+            <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-neutral-600 focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors duration-150" data-testid="contact-input-name">
           </div>
           <div>
-            <label for="phone" class="block text-sm text-neutral-400 mb-1.5">{{ c.contact.form_phone }}</label>
-            <input type="text" id="phone" name="phone" required class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-neutral-600 focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors" data-testid="contact-input-phone">
+            <label for="phone" class="block text-sm text-neutral-400 mb-1.5">{{ c.contact.form_phone }} *</label>
+            <input type="text" id="phone" name="phone" required class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-neutral-600 focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors duration-150" data-testid="contact-input-phone">
           </div>
           <div>
             <label for="business" class="block text-sm text-neutral-400 mb-1.5">{{ c.contact.form_business }}</label>
-            <select id="business" name="business" class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors" data-testid="contact-select-business">
+            <select id="business" name="business" class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors duration-150" data-testid="contact-select-business">
               <option value="">—</option>
               {% for slug, sol in c.solutions.niches.items() %}
               <option value="{{ slug }}">{{ sol.name }}</option>
@@ -36,7 +37,7 @@
           </div>
           <div>
             <label for="message" class="block text-sm text-neutral-400 mb-1.5">{{ c.contact.form_message }}</label>
-            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-neutral-600 focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors resize-none" data-testid="contact-textarea-message"></textarea>
+            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white placeholder-neutral-600 focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors duration-150 resize-none" data-testid="contact-textarea-message"></textarea>
           </div>
 
           <button type="submit" class="btn-primary w-full" data-testid="contact-submit-btn">{{ c.contact.form_submit }}</button>
@@ -54,7 +55,7 @@
           </div>
           <h2 class="text-xl font-bold text-white mb-3">{{ c.contact.telegram_title }}</h2>
           <p class="text-neutral-400 text-sm mb-6">{{ c.contact.telegram_desc }}</p>
-          <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary w-full text-center" data-testid="contact-telegram-btn" data-track="tg_start">{{ c.cta.telegram }}</a>
+          <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary w-full text-center" data-testid="contact-telegram-btn" data-track="tg_start" aria-label="{{ c.cta.telegram }}">{{ c.cta.telegram }}</a>
         </div>
       </div>
     </div>

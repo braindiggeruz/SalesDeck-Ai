@@ -5,7 +5,7 @@
   <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 via-transparent to-transparent"></div>
   <div class="section-container relative pt-12 sm:pt-20 pb-8">
     <div class="text-center max-w-2xl mx-auto">
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-testid="pricing-title">{{ c.pricing.title }}</h1>
+      <h1 class="fluid-h2 font-bold text-white mb-4" data-testid="pricing-title">{{ c.pricing.title }}</h1>
       <p class="text-lg text-neutral-400">{{ c.pricing.desc }}</p>
     </div>
   </div>
@@ -17,14 +17,14 @@
     {% for pkg in c.pricing.packages %}
     <div class="card flex flex-col relative {{ 'border-brand-accent/40 shadow-lg shadow-brand-accent/5' if pkg.popular else '' }}" data-testid="pricing-card-{{ pkg.id }}">
       {% if pkg.popular %}
-      <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-brand-accent text-brand-bg text-xs font-bold rounded-full">Popular</div>
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-brand-accent text-white text-xs font-bold rounded-full tracking-wide">Popular</div>
       {% endif %}
       <div class="mb-5">
         <h3 class="text-white font-bold text-xl mb-1">{{ pkg.name }}</h3>
         <p class="text-neutral-500 text-sm">{{ pkg.subtitle }}</p>
       </div>
       <div class="mb-6">
-        <span class="text-3xl font-extrabold text-white">{{ pkg.price }}</span>
+        <span class="text-3xl font-extrabold gradient-text">{{ pkg.price }}</span>
         <span class="text-sm text-neutral-500 ml-1">{{ pkg.price_note }}</span>
       </div>
       <ul class="space-y-3 mb-8 flex-1">
@@ -36,9 +36,9 @@
         {% endfor %}
       </ul>
       {% if pkg.cta_type == 'referral' %}
-      <a href="{{ ref_url }}" target="_blank" rel="noopener" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="referral_click">{{ pkg.cta }}</a>
+      <a href="{{ ref_url }}" target="_blank" rel="noopener" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="referral_click" aria-label="{{ pkg.cta }}">{{ pkg.cta }}</a>
       {% else %}
-      <a href="/{{ lang }}/contact/" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="book_demo">{{ pkg.cta }}</a>
+      <a href="/{{ lang }}/contact/" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="book_demo" aria-label="{{ pkg.cta }}">{{ pkg.cta }}</a>
       {% endif %}
     </div>
     {% endfor %}
@@ -68,5 +68,7 @@
 </section>
 {% endif %}
 
-<!-- SoftwareApplication Schema is in server.py -->
+{% with cta_title = c.pricing.title, cta_desc = c.pricing.desc %}
+{% include "partials/cta_block.html" %}
+{% endwith %}
 {% endblock %}
