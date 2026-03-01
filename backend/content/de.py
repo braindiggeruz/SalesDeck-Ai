@@ -316,7 +316,7 @@ CONTENT_DE = {
         "intro": "Wir sind das Team von SalesDesk AI — Ihr Integrator fuer KI-gestuetzte Vertriebsautomatisierung. Wir helfen Unternehmen in Deutschland und Europa, KI-Vertriebsassistenten schnell und zuverlaessig zu implementieren.",
         "mission_title": "Unsere Mission",
         "mission": "KI-Vertrieb fuer den Mittelstand zugaenglich machen. Keine IT-Abteilung noetig — wir richten alles schluesselfertg ein.",
-        "values": [
+        "principles": [
             {"title": "Geschwindigkeit", "desc": "Go-Live in 24-48 Stunden statt Monaten. Sie generieren sofort Leads."},
             {"title": "Transparenz", "desc": "Klare Preise, klarer Prozess. Keine versteckten Kosten."},
             {"title": "Prozessgarantie", "desc": "Wir stehen fuer Termine und Qualitaet ein. Nicht geliefert — Geld zurueck."},
