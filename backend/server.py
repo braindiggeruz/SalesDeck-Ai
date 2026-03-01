@@ -410,6 +410,9 @@ async def submit_lead(request: Request):
     message = str(data.get("message", "")).strip()
     lang = str(data.get("lang", "ru")).strip()
     source = str(data.get("source", "unknown")).strip()
+    lead_type = str(data.get("lead_type", "implementation")).strip()
+    page_url = str(data.get("page_url", "")).strip()
+    referrer = str(data.get("referrer", "")).strip()
 
     if not name or not phone:
         return JSONResponse(status_code=400, content={"error": "name and phone required"})
@@ -423,6 +426,14 @@ async def submit_lead(request: Request):
         "message": message,
         "lang": lang,
         "source": source,
+        "lead_type": lead_type,
+        "page_url": page_url,
+        "referrer": referrer,
+        "utm_source": str(data.get("utm_source", "")).strip(),
+        "utm_medium": str(data.get("utm_medium", "")).strip(),
+        "utm_campaign": str(data.get("utm_campaign", "")).strip(),
+        "utm_content": str(data.get("utm_content", "")).strip(),
+        "utm_term": str(data.get("utm_term", "")).strip(),
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     leads_col.insert_one(lead)
