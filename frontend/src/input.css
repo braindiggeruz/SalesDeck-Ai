@@ -3,38 +3,54 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --c-bg: 7 7 7;
+    --c-surface: 18 18 18;
+    --c-card: 22 22 29;
+    --c-border: 42 42 42;
+    --c-accent: 196 124 60;
+    --c-accent-light: 226 167 111;
+  }
   html { scroll-behavior: smooth; }
   body {
-    @apply bg-brand-bg text-slate-300 font-sans antialiased;
+    @apply bg-brand-bg text-neutral-400 font-sans antialiased;
   }
   ::selection {
-    @apply bg-cyan-500/30 text-white;
+    @apply bg-brand-accent/30 text-white;
+  }
+  /* Focus visible for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-accent;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-cyan-500 text-brand-bg font-semibold rounded-lg transition-all duration-200 hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/20 focus:outline-none focus:ring-2 focus:ring-cyan-500/50;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-brand-accent text-white font-semibold rounded-lg transition-all duration-200 hover:bg-brand-accent-light hover:shadow-lg hover:shadow-brand-accent/15 focus:outline-none focus:ring-2 focus:ring-brand-accent/50;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-cyan-500/30 text-cyan-400 font-medium rounded-lg transition-all duration-200 hover:bg-cyan-500/10 hover:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-brand-accent/30 text-brand-accent-light font-medium rounded-lg transition-all duration-200 hover:bg-brand-accent/10 hover:border-brand-accent/50 focus:outline-none focus:ring-2 focus:ring-brand-accent/50;
   }
   .card {
     @apply bg-brand-card border border-brand-border rounded-xl p-6 transition-all duration-200;
   }
   .card-hover {
-    @apply card hover:border-cyan-500/30 hover:shadow-lg hover:shadow-cyan-500/5;
+    @apply card hover:border-brand-accent/25 hover:shadow-lg hover:shadow-brand-accent/5;
   }
   .section-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-5 sm:px-6 lg:px-8;
   }
   .section-padding {
     @apply py-16 sm:py-24;
   }
   .gradient-text {
-    @apply bg-gradient-to-r from-cyan-400 to-teal-300 bg-clip-text text-transparent;
+    background: linear-gradient(135deg, #C47C3C 0%, #E2A76F 55%, #FAFAFA 140%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   .glow-line {
-    @apply h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent;
+    @apply h-px;
+    background: linear-gradient(90deg, transparent, rgba(196,124,60,0.4), transparent);
   }
 }

@@ -5,11 +5,13 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          bg: '#060B18',
-          surface: '#0C1425',
-          card: '#111C32',
-          border: '#1A2744',
-          accent: '#06B6D4',
+          bg: '#070707',
+          surface: '#121212',
+          card: '#16161D',
+          border: '#2A2A2A',
+          accent: '#C47C3C',
+          'accent-light': '#E2A76F',
+          'accent-dim': '#7A4D25',
         },
       },
       fontFamily: {
