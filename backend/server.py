@@ -138,6 +138,7 @@ def base_ctx(request: Request, lang: str, page: str, meta_title: str, meta_desc:
         "site_url": SITE_URL,
         "current_year": CURRENT_YEAR,
         "lang_path": lang_path,
+        "og_image": OG_IMAGE,
     }
 
 def make_breadcrumbs(lang: str, items: list) -> list:
