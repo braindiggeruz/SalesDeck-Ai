@@ -3,12 +3,12 @@
 <section class="section-padding">
   <div class="section-container max-w-4xl">
     <h1 class="text-3xl sm:text-4xl font-bold text-white mb-6" data-testid="about-title">{{ c.about.title }}</h1>
-    <p class="text-lg text-slate-400 leading-relaxed mb-12" data-testid="about-intro">{{ c.about.intro }}</p>
+    <p class="text-lg text-neutral-400 leading-relaxed mb-12" data-testid="about-intro">{{ c.about.intro }}</p>
 
     <!-- Mission -->
     <div class="card mb-10 border-brand-accent/20 bg-gradient-to-r from-brand-accent/5 to-transparent" data-testid="about-mission">
       <h2 class="text-xl font-bold text-white mb-3">{{ c.about.mission_title }}</h2>
-      <p class="text-slate-400 leading-relaxed">{{ c.about.mission }}</p>
+      <p class="text-neutral-400 leading-relaxed">{{ c.about.mission }}</p>
     </div>
 
     <!-- Values -->
@@ -17,7 +17,7 @@
       {% for val in c.about.principles %}
       <div class="card-hover" data-testid="about-value-{{ loop.index }}">
         <h3 class="text-white font-semibold mb-2">{{ val.title }}</h3>
-        <p class="text-slate-400 text-sm leading-relaxed">{{ val.desc }}</p>
+        <p class="text-neutral-400 text-sm leading-relaxed">{{ val.desc }}</p>
       </div>
       {% endfor %}
     </div>
@@ -25,7 +25,7 @@
     <!-- Tech -->
     <div class="card" data-testid="about-tech">
       <h2 class="text-xl font-bold text-white mb-3">{{ c.about.tech_title }}</h2>
-      <p class="text-slate-400 leading-relaxed">{{ c.about.tech_desc }}</p>
+      <p class="text-neutral-400 leading-relaxed">{{ c.about.tech_desc }}</p>
     </div>
   </div>
 </section>

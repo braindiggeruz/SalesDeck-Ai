@@ -3,7 +3,7 @@
 <article class="section-padding">
   <div class="section-container max-w-3xl">
     <!-- Meta -->
-    <div class="flex items-center gap-3 text-xs text-slate-500 mb-5">
+    <div class="flex items-center gap-3 text-xs text-neutral-500 mb-5">
       <span class="px-2 py-0.5 bg-brand-accent/10 text-brand-accent-light rounded-md font-medium">{{ c.blog.categories.get(post.category, post.category) }}</span>
       <time datetime="{{ post.date }}">{{ post.date }}</time>
       <span>{{ post.read_time }}</span>
@@ -13,13 +13,13 @@
 
     <!-- Content -->
     <div class="prose prose-invert max-w-none
-      [&>p]:text-slate-300 [&>p]:leading-relaxed [&>p]:mb-5
+      [&>p]:text-neutral-300 [&>p]:leading-relaxed [&>p]:mb-5
       [&>h2]:text-white [&>h2]:font-bold [&>h2]:text-xl [&>h2]:mt-10 [&>h2]:mb-4
       [&>h3]:text-white [&>h3]:font-semibold [&>h3]:text-lg [&>h3]:mt-8 [&>h3]:mb-3
-      [&>ul]:space-y-2 [&>ul]:mb-5 [&>ul>li]:text-slate-300 [&>ul>li]:pl-2
+      [&>ul]:space-y-2 [&>ul]:mb-5 [&>ul>li]:text-neutral-300 [&>ul>li]:pl-2
       [&>ul>li>strong]:text-white
-      [&>ol]:space-y-2 [&>ol]:mb-5 [&>ol>li]:text-slate-300
-      [&>blockquote]:border-l-2 [[&>blockquote]:border-cyan-500/50>blockquote]:border-brand-accent/50 [&>blockquote]:pl-4 [&>blockquote]:text-slate-400 [&>blockquote]:italic
+      [&>ol]:space-y-2 [&>ol]:mb-5 [&>ol>li]:text-neutral-300
+      [&>blockquote]:border-l-2 [[&>blockquote]:border-cyan-500/50>blockquote]:border-brand-accent/50 [&>blockquote]:pl-4 [&>blockquote]:text-neutral-400 [&>blockquote]:italic
     " data-testid="blog-post-content">
       {{ post.content|safe }}
     </div>
@@ -32,7 +32,7 @@
         {% for slug in post.related_solutions %}
         {% if slug in c.solutions.niches %}
         <a href="/{{ lang }}/solutions/{{ slug }}/" class="card-hover !p-3 flex items-center gap-2" data-testid="blog-related-{{ slug }}">
-          <span class="text-sm text-slate-300">{{ c.solutions.niches[slug].name }}</span>
+          <span class="text-sm text-neutral-300">{{ c.solutions.niches[slug].name }}</span>
         </a>
         {% endif %}
         {% endfor %}
@@ -48,7 +48,7 @@
 
     <!-- Back -->
     <div class="mt-8">
-      <a href="/{{ lang }}/blog/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">&larr; {{ c.cta.back_to_blog }}</a>
+      <a href="/{{ lang }}/blog/" class="text-sm text-neutral-500 hover:text-brand-accent-light transition-colors">&larr; {{ c.cta.back_to_blog }}</a>
     </div>
   </div>
 </article>

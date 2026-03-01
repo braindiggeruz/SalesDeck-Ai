@@ -7,7 +7,7 @@
     <div class="max-w-3xl">
       <p class="text-brand-accent-light font-semibold text-sm mb-4">{{ c.brand_tagline }} &mdash; {{ sol.name }}</p>
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6" data-testid="solution-hero-title">{{ sol.hero_title }}</h1>
-      <p class="text-lg text-slate-400 leading-relaxed mb-8" data-testid="solution-hero-desc">{{ sol.hero_desc }}</p>
+      <p class="text-lg text-neutral-400 leading-relaxed mb-8" data-testid="solution-hero-desc">{{ sol.hero_desc }}</p>
       <div class="flex flex-col sm:flex-row gap-4">
         <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-cta-demo" data-track="widget_engaged">{{ c.cta.try_demo }}</a>
         <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary" data-track="tg_start">{{ c.cta.turnkey }}</a>
@@ -26,7 +26,7 @@
         <div class="w-6 h-6 rounded-full bg-red-500/10 flex items-center justify-center shrink-0 mt-0.5">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </div>
-        <p class="text-slate-300 text-sm leading-relaxed">{{ problem }}</p>
+        <p class="text-neutral-300 text-sm leading-relaxed">{{ problem }}</p>
       </div>
       {% endfor %}
     </div>
@@ -44,7 +44,7 @@
           <div class="w-8 h-8 rounded-lg bg-brand-accent/10 flex items-center justify-center text-brand-accent-light font-bold text-sm">{{ loop.index }}</div>
           <h3 class="text-white font-semibold">{{ step.title }}</h3>
         </div>
-        <p class="text-slate-400 text-sm leading-relaxed">{{ step.desc }}</p>
+        <p class="text-neutral-400 text-sm leading-relaxed">{{ step.desc }}</p>
       </div>
       {% endfor %}
     </div>
@@ -61,7 +61,7 @@
         <div class="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <p class="text-slate-300 text-sm leading-relaxed">{{ result }}</p>
+        <p class="text-neutral-300 text-sm leading-relaxed">{{ result }}</p>
       </div>
       {% endfor %}
     </div>
