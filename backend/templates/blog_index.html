@@ -10,11 +10,11 @@
       {% for post in posts %}
       <a href="/{{ lang }}/blog/{{ post.slug }}/" class="card-hover block group" data-testid="blog-card-{{ post.slug }}">
         <div class="flex items-center gap-3 text-xs text-slate-500 mb-3">
-          <span class="px-2 py-0.5 bg-cyan-500/10 text-cyan-400 rounded-md font-medium">{{ c.blog.categories.get(post.category, post.category) }}</span>
+          <span class="px-2 py-0.5 bg-brand-accent/10 text-brand-accent-light rounded-md font-medium">{{ c.blog.categories.get(post.category, post.category) }}</span>
           <span>{{ post.date }}</span>
           <span>{{ post.read_time }}</span>
         </div>
-        <h2 class="text-xl font-semibold text-white group-hover:text-cyan-400 transition-colors mb-2">{{ post.title }}</h2>
+        <h2 class="text-xl font-semibold text-white group-hover:text-brand-accent-light transition-colors mb-2">{{ post.title }}</h2>
         <p class="text-slate-400 text-sm leading-relaxed">{{ post.excerpt }}</p>
       </a>
       {% endfor %}

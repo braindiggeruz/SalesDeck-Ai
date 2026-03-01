@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="relative overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-transparent"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 via-transparent to-transparent"></div>
   <div class="section-container relative pt-12 sm:pt-20 pb-8">
     <div class="text-center max-w-2xl mx-auto">
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-testid="demo-title">{{ c.demo.title }}</h1>
@@ -23,7 +23,7 @@
           </div>
         </noscript>
         <div id="widget-fallback" class="text-center py-12">
-          <div class="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-6">
+          <div class="w-16 h-16 rounded-2xl bg-brand-accent/10 flex items-center justify-center mx-auto mb-6">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
           <h3 class="text-white font-semibold text-lg mb-2">{{ c.demo.widget_title }}</h3>
@@ -42,7 +42,7 @@
     <div class="grid sm:grid-cols-2 gap-4">
       {% for tip in c.demo.tips %}
       <div class="card flex items-start gap-3" data-testid="demo-tip-{{ loop.index }}">
-        <div class="w-6 h-6 rounded-full bg-cyan-500/10 flex items-center justify-center shrink-0 mt-0.5 text-cyan-400 font-bold text-xs">{{ loop.index }}</div>
+        <div class="w-6 h-6 rounded-full bg-brand-accent/10 flex items-center justify-center shrink-0 mt-0.5 text-brand-accent-light font-bold text-xs">{{ loop.index }}</div>
         <p class="text-slate-300 text-sm leading-relaxed">{{ tip }}</p>
       </div>
       {% endfor %}

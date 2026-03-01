@@ -4,7 +4,7 @@
   <div class="section-container max-w-3xl">
     <!-- Meta -->
     <div class="flex items-center gap-3 text-xs text-slate-500 mb-5">
-      <span class="px-2 py-0.5 bg-cyan-500/10 text-cyan-400 rounded-md font-medium">{{ c.blog.categories.get(post.category, post.category) }}</span>
+      <span class="px-2 py-0.5 bg-brand-accent/10 text-brand-accent-light rounded-md font-medium">{{ c.blog.categories.get(post.category, post.category) }}</span>
       <time datetime="{{ post.date }}">{{ post.date }}</time>
       <span>{{ post.read_time }}</span>
     </div>
@@ -19,7 +19,7 @@
       [&>ul]:space-y-2 [&>ul]:mb-5 [&>ul>li]:text-slate-300 [&>ul>li]:pl-2
       [&>ul>li>strong]:text-white
       [&>ol]:space-y-2 [&>ol]:mb-5 [&>ol>li]:text-slate-300
-      [&>blockquote]:border-l-2 [&>blockquote]:border-cyan-500/50 [&>blockquote]:pl-4 [&>blockquote]:text-slate-400 [&>blockquote]:italic
+      [&>blockquote]:border-l-2 [[&>blockquote]:border-cyan-500/50>blockquote]:border-brand-accent/50 [&>blockquote]:pl-4 [&>blockquote]:text-slate-400 [&>blockquote]:italic
     " data-testid="blog-post-content">
       {{ post.content|safe }}
     </div>
@@ -41,14 +41,14 @@
     {% endif %}
 
     <!-- Next step CTA -->
-    <div class="mt-8 card border-cyan-500/20 bg-gradient-to-r from-cyan-500/5 to-transparent text-center" data-testid="blog-post-cta">
+    <div class="mt-8 card border-brand-accent/20 bg-gradient-to-r from-brand-accent/5 to-transparent text-center" data-testid="blog-post-cta">
       <p class="text-white font-semibold mb-3">{{ c.blog.next_step }}</p>
       <a href="/{{ lang }}/demo/" class="btn-primary text-sm" data-track="widget_engaged">{{ c.cta.try_demo }}</a>
     </div>
 
     <!-- Back -->
     <div class="mt-8">
-      <a href="/{{ lang }}/blog/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">&larr; {{ c.cta.back_to_blog }}</a>
+      <a href="/{{ lang }}/blog/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">&larr; {{ c.cta.back_to_blog }}</a>
     </div>
   </div>
 </article>

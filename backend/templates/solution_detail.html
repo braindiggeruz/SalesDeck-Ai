@@ -2,10 +2,10 @@
 {% block content %}
 <!-- Hero -->
 <section class="relative overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-transparent"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 via-transparent to-transparent"></div>
   <div class="section-container relative pt-12 sm:pt-20 pb-12 sm:pb-16">
     <div class="max-w-3xl">
-      <p class="text-cyan-400 font-semibold text-sm mb-4">{{ c.brand_tagline }} &mdash; {{ sol.name }}</p>
+      <p class="text-brand-accent-light font-semibold text-sm mb-4">{{ c.brand_tagline }} &mdash; {{ sol.name }}</p>
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6" data-testid="solution-hero-title">{{ sol.hero_title }}</h1>
       <p class="text-lg text-slate-400 leading-relaxed mb-8" data-testid="solution-hero-desc">{{ sol.hero_desc }}</p>
       <div class="flex flex-col sm:flex-row gap-4">
@@ -41,7 +41,7 @@
       {% for step in sol.how_it_works %}
       <div class="card-hover" data-testid="solution-how-{{ loop.index }}">
         <div class="flex items-center gap-3 mb-3">
-          <div class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold text-sm">{{ loop.index }}</div>
+          <div class="w-8 h-8 rounded-lg bg-brand-accent/10 flex items-center justify-center text-brand-accent-light font-bold text-sm">{{ loop.index }}</div>
           <h3 class="text-white font-semibold">{{ step.title }}</h3>
         </div>
         <p class="text-slate-400 text-sm leading-relaxed">{{ step.desc }}</p>

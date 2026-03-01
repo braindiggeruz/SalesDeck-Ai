@@ -2,7 +2,7 @@
 {% block content %}
 <!-- Header -->
 <section class="relative overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-b from-cyan-500/5 via-transparent to-transparent"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 via-transparent to-transparent"></div>
   <div class="section-container relative pt-12 sm:pt-20 pb-8">
     <div class="text-center max-w-2xl mx-auto">
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-testid="pricing-title">{{ c.pricing.title }}</h1>
@@ -15,9 +15,9 @@
 <section class="section-container pb-16">
   <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5" data-testid="pricing-grid">
     {% for pkg in c.pricing.packages %}
-    <div class="card flex flex-col relative {{ 'border-cyan-500/40 shadow-lg shadow-cyan-500/5' if pkg.popular else '' }}" data-testid="pricing-card-{{ pkg.id }}">
+    <div class="card flex flex-col relative {{ 'border-brand-accent/40 shadow-lg shadow-brand-accent/5' if pkg.popular else '' }}" data-testid="pricing-card-{{ pkg.id }}">
       {% if pkg.popular %}
-      <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-cyan-500 text-brand-bg text-xs font-bold rounded-full">Popular</div>
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-brand-accent text-brand-bg text-xs font-bold rounded-full">Popular</div>
       {% endif %}
       <div class="mb-5">
         <h3 class="text-white font-bold text-xl mb-1">{{ pkg.name }}</h3>

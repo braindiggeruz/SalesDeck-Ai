@@ -4,10 +4,10 @@
       <!-- Brand -->
       <div class="sm:col-span-2 lg:col-span-1">
         <a href="/{{ lang }}/" class="flex items-center gap-2.5 mb-4">
-          <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-400 to-teal-400 flex items-center justify-center">
+          <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-accent to-brand-accent-light flex items-center justify-center">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#060B18" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
-          <span class="text-white font-bold tracking-tight">SalesDesk<span class="text-cyan-400">&nbsp;AI</span></span>
+          <span class="text-white font-bold tracking-tight">SalesDesk<span class="text-brand-accent-light">&nbsp;AI</span></span>
         </a>
         <p class="text-sm text-slate-500 leading-relaxed mb-3">{{ c.footer.description }}</p>
         <p class="text-xs text-slate-600">{{ c.footer.powered_by }}</p>
@@ -17,11 +17,11 @@
       <div>
         <h4 class="text-white font-semibold text-sm mb-4">{{ c.footer.nav_title }}</h4>
         <ul class="space-y-2.5">
-          <li><a href="/{{ lang }}/solutions/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">{{ c.nav.solutions }}</a></li>
-          <li><a href="/{{ lang }}/pricing/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">{{ c.nav.pricing }}</a></li>
-          <li><a href="/{{ lang }}/demo/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">{{ c.nav.demo }}</a></li>
-          <li><a href="/{{ lang }}/blog/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">{{ c.nav.blog }}</a></li>
-          <li><a href="/{{ lang }}/about/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">{{ c.nav.about }}</a></li>
+          <li><a href="/{{ lang }}/solutions/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.solutions }}</a></li>
+          <li><a href="/{{ lang }}/pricing/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.pricing }}</a></li>
+          <li><a href="/{{ lang }}/demo/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.demo }}</a></li>
+          <li><a href="/{{ lang }}/blog/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.blog }}</a></li>
+          <li><a href="/{{ lang }}/about/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.about }}</a></li>
         </ul>
       </div>
 
@@ -29,8 +29,8 @@
       <div>
         <h4 class="text-white font-semibold text-sm mb-4">{{ c.footer.legal_title }}</h4>
         <ul class="space-y-2.5">
-          <li><a href="/{{ lang }}/privacy/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">{{ c.footer.privacy }}</a></li>
-          <li><a href="/{{ lang }}/terms/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">{{ c.footer.terms }}</a></li>
+          <li><a href="/{{ lang }}/privacy/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.footer.privacy }}</a></li>
+          <li><a href="/{{ lang }}/terms/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.footer.terms }}</a></li>
         </ul>
       </div>
 
@@ -38,9 +38,9 @@
       <div>
         <h4 class="text-white font-semibold text-sm mb-4">{{ c.footer.contact_title }}</h4>
         <ul class="space-y-2.5">
-          <li><a href="/{{ lang }}/contact/" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors">{{ c.nav.contact }}</a></li>
+          <li><a href="/{{ lang }}/contact/" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors">{{ c.nav.contact }}</a></li>
           {% if telegram_url %}
-          <li><a href="{{ telegram_url }}" target="_blank" rel="noopener" class="text-sm text-slate-500 hover:text-cyan-400 transition-colors" data-track="tg_start">Telegram</a></li>
+          <li><a href="{{ telegram_url }}" target="_blank" rel="noopener" class="text-sm text-slate-500 hover:text-brand-accent-light transition-colors" data-track="tg_start">Telegram</a></li>
           {% endif %}
         </ul>
       </div>

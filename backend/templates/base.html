@@ -46,7 +46,7 @@
       {% for bc in breadcrumbs %}
       <li class="flex items-center gap-2">
         {% if not loop.last %}
-        <a href="{{ bc.url }}" class="hover:text-cyan-400 transition-colors">{{ bc.name }}</a>
+        <a href="{{ bc.url }}" class="hover:text-brand-accent-light transition-colors">{{ bc.name }}</a>
         <span class="text-slate-600">/</span>
         {% else %}
         <span class="text-slate-400">{{ bc.name }}</span>
