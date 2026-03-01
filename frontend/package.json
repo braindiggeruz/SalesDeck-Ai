@@ -1,0 +1,16 @@
+{
+  "name": "salesdesk-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "build:css": "tailwindcss -i src/input.css -o ../backend/static/css/style.css --minify"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "http-proxy-middleware": "^3.0.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}
