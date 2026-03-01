@@ -30,9 +30,9 @@
       <h3 class="text-white font-semibold mb-4">{{ c.blog.read_also }}</h3>
       <div class="flex flex-wrap gap-3">
         {% for slug in post.related_solutions %}
-        {% if slug in c.solutions.items %}
+        {% if slug in c.solutions.niches %}
         <a href="/{{ lang }}/solutions/{{ slug }}/" class="card-hover !p-3 flex items-center gap-2" data-testid="blog-related-{{ slug }}">
-          <span class="text-sm text-slate-300">{{ c.solutions.items[slug].name }}</span>
+          <span class="text-sm text-slate-300">{{ c.solutions.niches[slug].name }}</span>
         </a>
         {% endif %}
         {% endfor %}

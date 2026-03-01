@@ -28,7 +28,7 @@
             <label for="business" class="block text-sm text-slate-400 mb-1.5">{{ c.contact.form_business }}</label>
             <select id="business" name="business" class="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-lg text-white focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-colors" data-testid="contact-select-business">
               <option value="">—</option>
-              {% for slug, sol in c.solutions.items.items() %}
+              {% for slug, sol in c.solutions.niches.items() %}
               <option value="{{ slug }}">{{ sol.name }}</option>
               {% endfor %}
               <option value="other">{{ 'Другое' if lang == 'ru' else 'Sonstiges' }}</option>

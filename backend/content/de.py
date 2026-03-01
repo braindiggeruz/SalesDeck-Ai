@@ -103,7 +103,7 @@ CONTENT_DE = {
         "meta_desc": "KI-Sales-Bot fuer Kosmetik, Bildung, Kliniken, Autowerkstaetten, Gastronomie, Immobilien und Einzelhandel. Einrichtung in 24-48 Stunden.",
         "title": "Loesungen fuer Ihre Branche",
         "desc": "SalesDesk AI passt sich an Ihre Branche an. Waehlen Sie Ihren Bereich — wir zeigen, wie der KI-Bot bei Ihnen arbeitet.",
-        "items": {
+        "niches": {
             "beauty": {
                 "name": "Kosmetik & Salons",
                 "icon": "sparkles",

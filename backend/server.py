@@ -211,9 +211,9 @@ async def solutions_index(request: Request, lang: str):
 async def solution_detail(request: Request, lang: str, slug: str):
     validate_lang(lang)
     c = get_content(lang)
-    if slug not in c["solutions"]["items"]:
+    if slug not in c["solutions"]["niches"]:
         raise HTTPException(status_code=404)
-    sol = c["solutions"]["items"][slug]
+    sol = c["solutions"]["niches"][slug]
     if "hero_title" not in sol:
         raise HTTPException(status_code=404)
 
