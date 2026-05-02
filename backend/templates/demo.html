@@ -1,36 +1,86 @@
 {% extends "base.html" %}
 {% block content %}
+<!-- Header -->
 <section class="relative overflow-hidden">
   <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 via-transparent to-transparent"></div>
   <div class="section-container relative pt-12 sm:pt-20 pb-8">
     <div class="text-center max-w-2xl mx-auto">
       <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4" data-testid="demo-title">{{ c.demo.title }}</h1>
-      <p class="text-lg text-neutral-400">{{ c.demo.desc }}</p>
+      <p class="text-base sm:text-lg text-neutral-400">{{ c.demo.desc }}</p>
     </div>
   </div>
 </section>
 
-<!-- Widget Area -->
+<!-- Interactive Demo -->
 <section class="section-container pb-12">
-  <div class="max-w-3xl mx-auto">
-    <div class="card min-h-[400px] flex items-center justify-center" data-testid="demo-widget-area">
-      <div id="nextbot-widget" class="w-full">
-        <!-- NextBot widget loads here (async) -->
-        <noscript>
-          <div class="text-center py-12">
-            <p class="text-neutral-400 mb-4">{{ c.demo.widget_fallback }}</p>
-            <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-primary" data-track="tg_start">{{ c.cta.telegram }}</a>
-          </div>
-        </noscript>
-        <div id="widget-fallback" class="text-center py-12">
-          <div class="w-16 h-16 rounded-2xl bg-brand-accent/10 flex items-center justify-center mx-auto mb-6">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C47C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <h3 class="text-white font-semibold text-lg mb-2">{{ c.demo.widget_title }}</h3>
-          <p class="text-neutral-400 text-sm mb-6">{{ c.demo.widget_fallback }}</p>
-          <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-primary" data-testid="demo-tg-fallback" data-track="tg_start">{{ c.cta.telegram }}</a>
-        </div>
+  <div class="grid lg:grid-cols-[280px_1fr] gap-5 max-w-5xl mx-auto" data-testid="demo-interactive">
+    <!-- Scenario picker -->
+    <aside>
+      <div class="text-[11px] font-semibold tracking-widest uppercase text-neutral-500 mb-3 px-1">{{ c.demo.scenarios_title }}</div>
+      <div role="tablist" aria-orientation="vertical" class="grid grid-cols-2 lg:grid-cols-1 gap-2" data-testid="demo-scenarios">
+        {% for sc in c.demo.scenarios %}
+        <button type="button"
+          role="tab"
+          aria-selected="{{ 'true' if loop.first else 'false' }}"
+          aria-controls="demo-chat"
+          data-demo-scenario="{{ sc.id }}"
+          class="demo-scenario-btn flex items-center gap-2.5 px-3 py-2.5 rounded-lg border text-left text-sm transition-all duration-150
+            {% if loop.first %}bg-brand-accent/10 border-brand-accent/40 text-white{% else %}bg-brand-card border-brand-border text-neutral-400 hover:text-white hover:border-brand-accent/30{% endif %}"
+          data-testid="demo-scenario-{{ sc.id }}"
+          data-track="demo_scenario_select"
+          data-track-payload='{"scenario":"{{ sc.id }}"}'>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-brand-accent-light">
+            {% if sc.icon == 'sparkles' %}<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>{% elif sc.icon == 'heart-pulse' %}<path d="M19.5 12.572l-7.5 7.428l-7.5-7.428A5 5 0 1 1 12 6.006a5 5 0 1 1 7.5 6.572"/>{% elif sc.icon == 'shopping-bag' %}<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>{% else %}<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>{% endif %}
+          </svg>
+          <span class="font-medium">{{ sc.label }}</span>
+        </button>
+        {% endfor %}
       </div>
+    </aside>
+
+    <!-- Chat -->
+    <div id="demo-chat" role="tabpanel" class="card relative overflow-hidden min-h-[460px] flex flex-col" data-testid="demo-chat">
+      <!-- Header -->
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-brand-border">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-accent to-brand-accent-light flex items-center justify-center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#070707" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <div class="text-white text-xs font-semibold leading-none mb-1">SalesDesk AI</div>
+            <div class="flex items-center gap-1 text-[10px] text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>online · 24/7</div>
+          </div>
+        </div>
+        <div id="demo-status" class="text-[10px] font-semibold text-brand-accent-light bg-brand-accent/10 px-2 py-1 rounded-full" data-testid="demo-status">{{ c.demo.status_new }}</div>
+      </div>
+
+      <!-- Messages -->
+      <div id="demo-messages" class="flex-1 space-y-2.5 overflow-y-auto pr-1" data-testid="demo-messages" style="scroll-behavior:smooth;"></div>
+
+      <!-- Footer with replay + final -->
+      <div class="mt-4 pt-3 border-t border-brand-border flex items-center justify-between gap-3">
+        <div id="demo-final" class="text-[11px] text-emerald-400 font-medium opacity-0 transition-opacity duration-300" data-testid="demo-final"></div>
+        <button id="demo-replay" type="button" class="text-xs text-neutral-500 hover:text-brand-accent-light transition-colors inline-flex items-center gap-1.5" data-testid="demo-replay">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Replay
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario data (JSON) -->
+  <script id="demo-scenarios-data" type="application/json">{{ c.demo.scenarios | tojson }}</script>
+  <script id="demo-strings-data" type="application/json">{{ {"new": c.demo.status_new, "qualified": c.demo.status_qualified} | tojson }}</script>
+
+  <!-- Post-demo CTA -->
+  <div class="max-w-3xl mx-auto mt-10 text-center" data-testid="demo-after-cta">
+    <h2 class="text-xl sm:text-2xl font-bold text-white mb-2">{{ c.demo.after_demo_title }}</h2>
+    <p class="text-neutral-400 text-sm mb-6">{{ c.demo.after_demo_desc }}</p>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="/{{ lang }}/contact/" class="btn-primary text-sm" data-testid="demo-after-contact" data-track="demo_cta_click" data-track-payload='{"target":"contact"}'>{{ c.demo.after_demo_cta }}</a>
+      {% if telegram_url %}
+      <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary text-sm" data-testid="demo-after-telegram" data-track="telegram_click" data-track-payload='{"location":"demo_after"}'>{{ c.demo.after_demo_telegram }}</a>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -75,4 +125,8 @@
 {% with cta_title = c.demo.title, cta_desc = c.demo.desc %}
 {% include "partials/cta_block.html" %}
 {% endwith %}
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="/static/js/demo.js" defer></script>
 {% endblock %}

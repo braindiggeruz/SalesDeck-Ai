@@ -1,0 +1,15 @@
+<!-- Mobile sticky CTA (visible only on mobile, after small scroll) -->
+<div id="mobile-sticky" class="lg:hidden fixed bottom-0 inset-x-0 z-40 px-3 pb-3 pt-2 pointer-events-none opacity-0 translate-y-3 transition-all duration-200" data-testid="mobile-sticky-cta">
+  <div class="pointer-events-auto bg-brand-card/95 backdrop-blur-xl border border-brand-border rounded-2xl p-2 shadow-2xl shadow-black/60 flex gap-2">
+    <a href="/{{ lang }}/demo/" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-brand-accent text-white font-semibold text-sm rounded-xl active:scale-[0.98] transition-transform" data-testid="mobile-sticky-demo" data-track="mobile_sticky_cta_click" data-track-payload='{"target":"demo"}' aria-label="{{ c.mobile_sticky.demo }}">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      {{ c.mobile_sticky.demo }}
+    </a>
+    {% if telegram_url %}
+    <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 border border-brand-accent/40 text-brand-accent-light font-semibold text-sm rounded-xl active:scale-[0.98] transition-transform" data-testid="mobile-sticky-telegram" data-track="mobile_sticky_cta_click" data-track-payload='{"target":"telegram"}' aria-label="{{ c.mobile_sticky.telegram }}">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      {{ c.mobile_sticky.telegram }}
+    </a>
+    {% endif %}
+  </div>
+</div>

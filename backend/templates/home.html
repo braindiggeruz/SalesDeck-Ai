@@ -3,27 +3,76 @@
 <!-- Hero -->
 <section class="relative overflow-hidden">
   <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 via-transparent to-transparent"></div>
-  <div class="section-container relative pt-16 sm:pt-24 pb-16 sm:pb-20">
-    <div class="max-w-3xl">
-      <p class="text-brand-accent font-semibold text-sm tracking-wide uppercase mb-4" data-testid="hero-tagline">{{ c.brand_tagline }}</p>
-      <h1 class="fluid-h1 font-extrabold text-white leading-tight mb-6" data-testid="hero-title">
-        {{ p.hero_title }}.<br>
-        <span class="gradient-text">{{ p.hero_highlight }}.</span>
-      </h1>
-      <p class="text-lg sm:text-xl text-neutral-400 leading-relaxed mb-10 max-w-2xl" data-testid="hero-desc">{{ p.hero_desc }}</p>
-      <div class="flex flex-col sm:flex-row gap-4">
-        <a href="/{{ lang }}/demo/" class="btn-primary text-base" data-testid="hero-cta-primary" data-track="widget_engaged" aria-label="{{ p.hero_cta_primary }}">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          {{ p.hero_cta_primary }}
-        </a>
-        <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary text-base" data-testid="hero-cta-secondary" data-track="tg_start" aria-label="{{ p.hero_cta_secondary }}">{{ p.hero_cta_secondary }}</a>
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_30%,rgba(196,124,60,0.10),transparent_70%)]"></div>
+  <div class="section-container relative pt-12 sm:pt-20 pb-12 sm:pb-16">
+    <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center">
+      <!-- Left: copy -->
+      <div>
+        <p class="text-brand-accent font-semibold text-xs sm:text-sm tracking-[0.2em] uppercase mb-5" data-testid="hero-tagline">{{ c.brand_tagline }}</p>
+        <h1 class="fluid-h1 font-extrabold text-white leading-[1.05] mb-6" data-testid="hero-title">
+          {{ p.hero_title }} <span class="gradient-text">{{ p.hero_highlight }}</span>.
+        </h1>
+        <p class="text-base sm:text-lg text-neutral-400 leading-relaxed mb-7 max-w-xl" data-testid="hero-desc">{{ p.hero_desc }}</p>
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <a href="/{{ lang }}/demo/" class="btn-primary text-base" data-testid="hero-cta-primary" data-track="hero_cta_click" data-track-payload='{"target":"demo"}' aria-label="{{ p.hero_cta_primary }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            {{ p.hero_cta_primary }}
+          </a>
+          <a href="/{{ lang }}/contact/" class="btn-secondary text-base" data-testid="hero-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"location":"hero","target":"contact"}' aria-label="{{ p.hero_cta_secondary }}">{{ p.hero_cta_secondary }}</a>
+        </div>
+        <p class="text-xs text-neutral-500 mt-4" data-testid="hero-microcopy">{{ c.cta_micro }}</p>
+      </div>
+
+      <!-- Right: chat mockup -->
+      <div class="relative" data-testid="hero-mockup">
+        <div class="absolute -inset-6 bg-brand-accent/5 blur-3xl rounded-full pointer-events-none"></div>
+        <div class="relative bg-brand-card border border-brand-border rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40">
+          <!-- Chat header -->
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-brand-border">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-accent to-brand-accent-light flex items-center justify-center">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#070707" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div>
+                <div class="text-white text-xs font-semibold leading-none mb-1">SalesDesk AI</div>
+                <div class="flex items-center gap-1 text-[10px] text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>online · 24/7</div>
+              </div>
+            </div>
+            <div class="text-[10px] font-semibold text-brand-accent-light bg-brand-accent/10 px-2 py-1 rounded-full" data-testid="hero-mockup-status">{{ p.hero_mockup_status_new }}</div>
+          </div>
+          <!-- Messages -->
+          <div class="space-y-2.5 max-h-[280px] overflow-hidden">
+            {% for m in p.hero_mockup_messages %}
+            <div class="flex {{ 'justify-end' if m.role == 'user' else 'justify-start' }}">
+              <div class="max-w-[85%] px-3.5 py-2 rounded-2xl text-xs leading-relaxed
+                {{ 'bg-brand-accent text-white rounded-br-md' if m.role == 'user' else 'bg-brand-bg border border-brand-border text-neutral-200 rounded-bl-md' }}">
+                {{ m.text }}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <!-- Status badges -->
+          <div class="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-brand-border">
+            <span class="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              {{ p.hero_mockup_status_qualified }}
+            </span>
+            <span class="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded-full bg-brand-accent/10 text-brand-accent-light border border-brand-accent/20">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              {{ p.hero_mockup_status_handed }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- Trust strip -->
+{% include "partials/trust_strip.html" %}
+
 <!-- Stats -->
-<section class="border-y border-brand-border bg-brand-surface/50">
+<section class="bg-brand-surface/30 border-b border-brand-border">
   <div class="section-container py-10">
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-8" data-testid="stats-section">
       {% for s in p.stats %}
@@ -57,8 +106,27 @@
   </div>
 </section>
 
+<!-- Cost of inaction -->
+<section class="section-padding bg-brand-surface border-y border-brand-border" id="cost">
+  <div class="section-container">
+    <div class="max-w-3xl mb-10">
+      <h2 class="fluid-h2 font-bold text-white mb-4" data-testid="cost-title">{{ p.cost_title }}</h2>
+      <p class="text-base sm:text-lg text-neutral-400 leading-relaxed" data-testid="cost-desc">{{ p.cost_desc }}</p>
+    </div>
+    <div class="grid sm:grid-cols-3 gap-5">
+      {% for card in p.cost_cards %}
+      <div class="card-hover" data-testid="cost-card-{{ loop.index }}">
+        <div class="text-brand-accent-light font-bold text-xs tracking-widest uppercase mb-3">— 0{{ loop.index }}</div>
+        <h3 class="text-white font-semibold text-base mb-2">{{ card.title }}</h3>
+        <p class="text-neutral-400 text-sm leading-relaxed">{{ card.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 <!-- Solution -->
-<section class="section-padding bg-brand-surface border-y border-brand-border" id="solution">
+<section class="section-padding" id="solution">
   <div class="section-container">
     <h2 class="fluid-h2 font-bold text-white text-center mb-4" data-testid="solution-title">{{ p.solution_title }}</h2>
     <div class="glow-line max-w-xs mx-auto mb-12"></div>
@@ -78,23 +146,63 @@
   </div>
 </section>
 
+<!-- Flow timeline (mini demo cards) -->
+<section class="section-padding bg-brand-surface border-y border-brand-border" id="flow">
+  <div class="section-container">
+    <div class="max-w-2xl mb-10">
+      <h2 class="fluid-h2 font-bold text-white mb-3" data-testid="flow-title">{{ p.flow_title }}</h2>
+      <p class="text-neutral-400" data-testid="flow-subtitle">{{ p.flow_subtitle }}</p>
+    </div>
+    <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
+      {% for s in p.flow_steps %}
+      <li class="card-hover relative flex flex-col" data-testid="flow-step-{{ loop.index }}">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-7 h-7 rounded-full
+            {% if s.role == 'user' %}bg-white/5 text-neutral-300 border border-brand-border
+            {% elif s.role == 'manager' %}bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
+            {% else %}bg-brand-accent/15 text-brand-accent-light border border-brand-accent/30{% endif %}
+            flex items-center justify-center text-[11px] font-bold">{{ loop.index }}</div>
+          <div class="text-[10px] font-semibold tracking-widest uppercase
+            {% if s.role == 'user' %}text-neutral-500
+            {% elif s.role == 'manager' %}text-emerald-400
+            {% else %}text-brand-accent-light{% endif %}">
+            {% if s.role == 'user' %}Client{% elif s.role == 'manager' %}Team{% else %}AI Bot{% endif %}
+          </div>
+        </div>
+        <h3 class="text-white font-semibold text-sm mb-2">{{ s.title }}</h3>
+        <p class="text-neutral-400 text-sm leading-relaxed">{{ s.desc }}</p>
+        {% if not loop.last %}
+        <span class="hidden lg:flex absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 items-center justify-center text-brand-accent/40 z-10" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="text-center mt-10">
+      <a href="/{{ lang }}/demo/" class="btn-primary text-sm" data-testid="flow-demo-cta" data-track="hero_cta_click" data-track-payload='{"location":"flow","target":"demo"}'>{{ c.cta.primary }}</a>
+    </div>
+  </div>
+</section>
+
 <!-- Industries -->
 <section class="section-padding" id="industries">
   <div class="section-container">
     <h2 class="fluid-h2 font-bold text-white text-center mb-3" data-testid="industries-title">{{ p.industries_title }}</h2>
-    <p class="text-neutral-400 text-center mb-12 max-w-lg mx-auto">{{ p.industries_desc }}</p>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <p class="text-neutral-400 text-center mb-3 max-w-lg mx-auto">{{ p.industries_desc }}</p>
+    <p class="text-sm text-brand-accent-light/80 text-center mb-12 max-w-xl mx-auto italic">{{ p.industries_use_case }}</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {% for slug, sol in c.solutions.niches.items() %}
-      {% set has_detail = slug in ['beauty', 'education'] %}
-      <a href="/{{ lang }}/solutions/{{ slug }}/" class="card-hover flex items-start gap-4 {{ '' if has_detail else 'opacity-80' }}" data-testid="industry-{{ slug }}">
-        <div class="w-9 h-9 rounded-lg bg-brand-accent/10 flex items-center justify-center shrink-0 mt-0.5">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C47C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <a href="/{{ lang }}/solutions/{{ slug }}/" class="card-hover flex items-start gap-4 group" data-testid="industry-{{ slug }}">
+        <div class="w-10 h-10 rounded-lg bg-brand-accent/10 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-brand-accent/20 transition-colors">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C47C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             {% if sol.icon == 'sparkles' %}<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>{% elif sol.icon == 'graduation-cap' %}<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>{% elif sol.icon == 'heart-pulse' %}<path d="M19.5 12.572l-7.5 7.428l-7.5-7.428A5 5 0 1 1 12 6.006a5 5 0 1 1 7.5 6.572"/>{% elif sol.icon == 'car' %}<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2.7-3.4A1 1 0 0 0 14.5 6h-5a1 1 0 0 0-.8.4L6 10l-2.5 1.1C2.7 11.3 2 12.1 2 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>{% elif sol.icon == 'utensils' %}<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>{% elif sol.icon == 'building' %}<rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/>{% else %}<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>{% endif %}
           </svg>
         </div>
-        <div>
-          <h3 class="text-white font-medium text-sm mb-1">{{ sol.name }}</h3>
-          <p class="text-neutral-500 text-xs leading-relaxed">{{ sol.short_desc }}</p>
+        <div class="flex-1">
+          <h3 class="text-white font-semibold text-sm mb-1 group-hover:text-brand-accent-light transition-colors">{{ sol.name }}</h3>
+          <p class="text-neutral-500 text-xs leading-relaxed mb-2">{{ sol.short_desc }}</p>
+          <p class="text-brand-accent-light/70 text-[11px] leading-snug">{{ sol.use_case if sol.use_case else c.solutions.generic_use_case }}</p>
         </div>
       </a>
       {% endfor %}
@@ -121,6 +229,9 @@
     </div>
   </div>
 </section>
+
+<!-- Inline lead form -->
+{% include "partials/inline_lead_form.html" %}
 
 <!-- Guarantee -->
 <section class="section-padding">

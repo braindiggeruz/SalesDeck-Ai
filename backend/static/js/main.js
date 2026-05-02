@@ -36,4 +36,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+
+  // Generic toggle (e.g., "Add message" on contact form)
+  document.querySelectorAll('[data-toggle-target]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = document.getElementById(btn.getAttribute('data-toggle-target'));
+      if (!target) return;
+      target.classList.toggle('hidden');
+      btn.classList.toggle('opacity-50');
+    });
+  });
 });

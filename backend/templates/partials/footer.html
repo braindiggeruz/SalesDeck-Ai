@@ -1,4 +1,4 @@
-<footer class="border-t border-brand-border bg-brand-surface mt-auto">
+<footer class="border-t border-brand-border bg-brand-surface mt-auto pb-20 lg:pb-0">
   <div class="section-container py-12 sm:py-16">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
       <!-- Brand -->
@@ -9,7 +9,7 @@
           </div>
           <span class="text-white font-bold tracking-tight">SalesDesk<span class="text-brand-accent-light">&nbsp;AI</span></span>
         </a>
-        <p class="text-sm text-neutral-500 leading-relaxed mb-3">{{ c.footer.description }}</p>
+        <p class="text-sm text-neutral-500 leading-relaxed mb-3">{{ c.footer.trust_copy }}</p>
         <p class="text-xs text-neutral-600">{{ c.footer.powered_by }}</p>
       </div>
 
@@ -40,8 +40,14 @@
         <ul class="space-y-2.5">
           <li><a href="/{{ lang }}/contact/" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150">{{ c.nav.contact }}</a></li>
           {% if telegram_url %}
-          <li><a href="{{ telegram_url }}" target="_blank" rel="noopener" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150" data-track="tg_start">Telegram</a></li>
+          <li><a href="{{ telegram_url }}" target="_blank" rel="noopener" class="text-sm text-neutral-500 hover:text-brand-accent transition-colors duration-150 inline-flex items-center gap-1.5" data-track="telegram_click" data-track-payload='{"location":"footer"}'>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Telegram
+          </a></li>
           {% endif %}
+          <li class="pt-2">
+            <a href="/{{ c.other_lang }}/{{ lang_path }}" class="text-xs text-neutral-600 hover:text-neutral-400 transition-colors uppercase tracking-wider" data-track="lang_switch">{{ c.other_lang_name }} version →</a>
+          </li>
         </ul>
       </div>
     </div>

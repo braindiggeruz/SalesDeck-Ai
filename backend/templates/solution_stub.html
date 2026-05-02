@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Hero (stub) -->
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 via-transparent to-transparent"></div>
+  <div class="section-container relative pt-12 sm:pt-20 pb-10">
+    <div class="max-w-3xl">
+      <p class="text-brand-accent-light font-semibold text-sm mb-4">{{ c.brand_tagline }} &mdash; {{ sol.name }}</p>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6" data-testid="solution-stub-title">{{ sol.hero_title or sol.name }}</h1>
+      <p class="text-lg text-neutral-400 leading-relaxed mb-2" data-testid="solution-stub-desc">{{ sol.hero_desc or sol.short_desc }}</p>
+      <p class="text-sm text-brand-accent-light/80 italic mb-8">{{ sol.use_case or c.solutions.generic_use_case }}</p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-stub-cta-demo" data-track="hero_cta_click" data-track-payload='{"location":"solution_stub","target":"demo"}'>{{ c.cta.primary }}</a>
+        <a href="/{{ lang }}/contact/" class="btn-secondary" data-testid="solution-stub-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"location":"solution_stub","target":"contact"}'>{{ c.cta.secondary }}</a>
+      </div>
+      <p class="text-xs text-neutral-500 mt-3">{{ c.cta_micro }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- Generic flow (3 steps) -->
+<section class="section-padding bg-brand-surface border-y border-brand-border">
+  <div class="section-container">
+    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-8" data-testid="solution-stub-flow-title">{{ c.solutions.stub_flow_title }}</h2>
+    <div class="grid sm:grid-cols-3 gap-5">
+      {% for step in c.solutions.stub_flow %}
+      <div class="card-hover" data-testid="solution-stub-flow-{{ loop.index }}">
+        <div class="w-9 h-9 rounded-lg bg-brand-accent/10 flex items-center justify-center text-brand-accent-light font-bold text-sm mb-4">{{ loop.index }}</div>
+        <h3 class="text-white font-semibold mb-2">{{ step.title }}</h3>
+        <p class="text-neutral-400 text-sm leading-relaxed">{{ step.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% with cta_title = sol.name, cta_desc = sol.short_desc %}
+{% include "partials/cta_block.html" %}
+{% endwith %}
+{% endblock %}

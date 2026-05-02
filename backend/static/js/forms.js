@@ -60,7 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(function() {
         if (successEl) successEl.classList.remove('hidden');
         form.reset();
-        if (typeof track === 'function') track('lead', { source: data.source || 'contact_form' });
+        if (typeof window.track === 'function') {
+          window.track('lead_form_success', { source: data.source || 'contact_form' });
+        }
       })
       .catch(function() {
         if (errorEl) errorEl.classList.remove('hidden');

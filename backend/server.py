@@ -216,17 +216,21 @@ async def solution_detail(request: Request, lang: str, slug: str):
     if slug not in c["solutions"]["niches"]:
         raise HTTPException(status_code=404)
     sol = c["solutions"]["niches"][slug]
-    if "hero_title" not in sol:
-        raise HTTPException(status_code=404)
 
     bc = make_breadcrumbs(lang, [
         ("solutions", f"{SITE_URL}/{lang}/solutions/"),
         (sol["name"], None),
     ])
-    ctx = base_ctx(request, lang, "solutions", sol["meta_title"], sol["meta_desc"], breadcrumbs=bc)
+    meta_title = sol.get("meta_title") or f"{sol['name']} | SalesDesk AI"
+    meta_desc = sol.get("meta_desc") or sol.get("short_desc", "")
+    ctx = base_ctx(request, lang, "solutions", meta_title, meta_desc, breadcrumbs=bc)
     ctx["sol"] = sol
     ctx["p"] = c["home"]
-    return templates.TemplateResponse("solution_detail.html", ctx)
+
+    # Full detail page if hero_title + how_it_works exist; otherwise generic stub.
+    if sol.get("hero_title") and sol.get("how_it_works"):
+        return templates.TemplateResponse("solution_detail.html", ctx)
+    return templates.TemplateResponse("solution_stub.html", ctx)
 
 
 # --- Pricing ---

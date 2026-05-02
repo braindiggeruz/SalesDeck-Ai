@@ -11,8 +11,20 @@
       <p class="text-neutral-400 leading-relaxed">{{ c.about.mission }}</p>
     </div>
 
-    <!-- Values -->
-    <h2 class="text-2xl font-bold text-white mb-6">{{ c.about.principles[0].title if c.about.principles else '' }}</h2>
+    <!-- How we work -->
+    <h2 class="text-2xl font-bold text-white mb-6" data-testid="about-how-title">{{ c.about.how_title }}</h2>
+    <div class="grid sm:grid-cols-3 gap-5 mb-12" data-testid="about-how-grid">
+      {% for step in c.about.how_steps %}
+      <div class="card-hover" data-testid="about-how-step-{{ loop.index }}">
+        <div class="text-4xl font-extrabold text-brand-accent/15 mb-3 leading-none">{{ step.num }}</div>
+        <h3 class="text-white font-semibold text-base mb-2">{{ step.title }}</h3>
+        <p class="text-neutral-400 text-sm leading-relaxed">{{ step.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Principles -->
+    <h2 class="text-2xl font-bold text-white mb-6" data-testid="about-principles-title">{{ c.about.principles_title }}</h2>
     <div class="grid sm:grid-cols-2 gap-5 mb-12">
       {% for val in c.about.principles %}
       <div class="card-hover" data-testid="about-value-{{ loop.index }}">

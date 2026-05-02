@@ -1,0 +1,26 @@
+<!-- Inline lead form (compact, single-step) -->
+<section class="section-padding">
+  <div class="section-container max-w-3xl">
+    <div class="card border-brand-accent/20 bg-gradient-to-b from-brand-accent/5 to-transparent" data-testid="inline-lead-form-block">
+      <div class="text-center mb-6">
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">{{ c.home.inline_form_title }}</h2>
+        <p class="text-neutral-400 text-sm">{{ c.home.inline_form_desc }}</p>
+      </div>
+      <form method="post" action="/api/lead" data-enhanced class="grid sm:grid-cols-[1fr_1fr_auto] gap-3" data-testid="inline-lead-form">
+        <div class="hidden" aria-hidden="true">
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <input type="hidden" name="source" value="home_inline">
+        <input type="hidden" name="lead_type" value="demo">
+
+        <input type="text" name="name" required placeholder="{{ c.contact.form_name }}" class="px-4 py-3 bg-brand-bg border border-brand-border rounded-lg text-white placeholder-neutral-600 text-sm focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors duration-150" data-testid="inline-input-name">
+        <input type="text" name="phone" required placeholder="{{ c.contact.form_contact }}" class="px-4 py-3 bg-brand-bg border border-brand-border rounded-lg text-white placeholder-neutral-600 text-sm focus:border-brand-accent/50 focus:outline-none focus:ring-1 focus:ring-brand-accent/50 transition-colors duration-150" data-testid="inline-input-phone">
+        <button type="submit" class="btn-primary text-sm whitespace-nowrap" data-testid="inline-submit-btn" data-track="lead_form_submit" data-track-payload='{"source":"home_inline"}'>{{ c.cta.primary }}</button>
+        <div data-form-success class="hidden sm:col-span-3 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-xs" data-testid="inline-form-success">{{ c.contact.form_success }}</div>
+        <div data-form-error class="hidden sm:col-span-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs" data-testid="inline-form-error">{{ c.contact.form_error }}</div>
+      </form>
+      <p class="text-center text-[11px] text-neutral-600 mt-4">{{ c.cta_micro }}</p>
+    </div>
+  </div>
+</section>

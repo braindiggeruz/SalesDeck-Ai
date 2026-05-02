@@ -3,28 +3,34 @@
 <!-- Header -->
 <section class="relative overflow-hidden">
   <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 via-transparent to-transparent"></div>
-  <div class="section-container relative pt-12 sm:pt-20 pb-8">
+  <div class="section-container relative pt-12 sm:pt-20 pb-6">
     <div class="text-center max-w-2xl mx-auto">
       <h1 class="fluid-h2 font-bold text-white mb-4" data-testid="pricing-title">{{ c.pricing.title }}</h1>
-      <p class="text-lg text-neutral-400">{{ c.pricing.desc }}</p>
+      <p class="text-base sm:text-lg text-neutral-400 mb-2">{{ c.pricing.desc }}</p>
+      <p class="text-sm text-brand-accent-light/80 italic">{{ c.pricing.intro }}</p>
     </div>
   </div>
 </section>
 
-<!-- Packages -->
-<section class="section-container pb-16">
-  <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5" data-testid="pricing-grid">
+<!-- Trust strip -->
+{% include "partials/trust_strip.html" %}
+
+<!-- Packages (3 paid: Lite → Pro → Max) -->
+<section class="section-container pt-12 pb-10">
+  <div class="grid md:grid-cols-3 gap-5 lg:gap-6 items-stretch" data-testid="pricing-grid">
     {% for pkg in c.pricing.packages %}
-    <div class="card flex flex-col relative {{ 'border-brand-accent/40 shadow-lg shadow-brand-accent/5' if pkg.popular else '' }}" data-testid="pricing-card-{{ pkg.id }}">
+    <div class="card flex flex-col relative
+      {% if pkg.popular %}border-brand-accent/50 shadow-xl shadow-brand-accent/10 lg:scale-[1.03]{% endif %}"
+      data-testid="pricing-card-{{ pkg.id }}">
       {% if pkg.popular %}
-      <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-brand-accent text-white text-xs font-bold rounded-full tracking-wide">Popular</div>
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-brand-accent text-white text-xs font-bold rounded-full tracking-wide shadow-lg shadow-brand-accent/30">{{ pkg.popular_label or 'Popular' }}</div>
       {% endif %}
       <div class="mb-5">
         <h3 class="text-white font-bold text-xl mb-1">{{ pkg.name }}</h3>
         <p class="text-neutral-500 text-sm">{{ pkg.subtitle }}</p>
       </div>
       <div class="mb-6">
-        <span class="text-3xl font-extrabold gradient-text">{{ pkg.price }}</span>
+        <span class="text-3xl font-extrabold {{ 'gradient-text' if pkg.popular else 'text-white' }}">{{ pkg.price }}</span>
         <span class="text-sm text-neutral-500 ml-1">{{ pkg.price_note }}</span>
       </div>
       <ul class="space-y-3 mb-8 flex-1">
@@ -35,18 +41,38 @@
         </li>
         {% endfor %}
       </ul>
-      {% if pkg.cta_type == 'referral' %}
-      <a href="{{ ref_url }}" target="_blank" rel="noopener" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="referral_click" aria-label="{{ pkg.cta }}">{{ pkg.cta }}</a>
-      {% else %}
-      <a href="/{{ lang }}/contact/" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="book_demo" aria-label="{{ pkg.cta }}">{{ pkg.cta }}</a>
-      {% endif %}
+      <a href="/{{ lang }}/contact/" class="{{ 'btn-primary' if pkg.popular else 'btn-secondary' }} w-full text-center text-sm" data-testid="pricing-cta-{{ pkg.id }}" data-track="pricing_plan_click" data-track-payload='{"plan":"{{ pkg.id }}"}' aria-label="{{ pkg.cta }}">{{ pkg.cta }}</a>
     </div>
     {% endfor %}
   </div>
   <p class="text-center text-sm text-neutral-500 mt-8" data-testid="pricing-note">{{ c.pricing.note }}</p>
 </section>
 
-<!-- FAQ -->
+<!-- Self-Serve (quiet secondary option) -->
+<section class="section-container pb-16">
+  <div class="border border-dashed border-brand-border rounded-2xl p-6 sm:p-8 bg-brand-surface/30 max-w-4xl mx-auto" data-testid="pricing-self-serve">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8">
+      <div class="flex-1">
+        <p class="text-[11px] font-semibold tracking-widest uppercase text-neutral-500 mb-2">{{ c.pricing.self_serve.name }}</p>
+        <h3 class="text-white font-semibold text-lg mb-2">{{ c.pricing.self_serve.title }}</h3>
+        <p class="text-neutral-400 text-sm leading-relaxed mb-4">{{ c.pricing.self_serve.subtitle }}</p>
+        <ul class="grid sm:grid-cols-2 gap-x-5 gap-y-1.5">
+          {% for feat in c.pricing.self_serve.features %}
+          <li class="flex items-start gap-2 text-xs text-neutral-500">
+            <span class="text-brand-accent/60 mt-0.5">•</span>
+            <span>{{ feat }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="shrink-0">
+        <a href="{{ ref_url }}" target="_blank" rel="noopener" class="btn-secondary text-sm whitespace-nowrap" data-testid="pricing-self-serve-cta" data-track="pricing_plan_click" data-track-payload='{"plan":"self-serve"}' aria-label="{{ c.pricing.self_serve.cta }}">{{ c.pricing.self_serve.cta }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing FAQ -->
 {% if c.pricing.faq %}
 <section class="section-padding bg-brand-surface border-y border-brand-border">
   <div class="section-container max-w-3xl">

@@ -31,8 +31,8 @@
           {{ c.other_lang_name }}
         </a>
         <!-- CTA -->
-        <a href="/{{ lang }}/demo/" class="hidden sm:inline-flex btn-primary !px-5 !py-2.5 text-sm" data-testid="header-cta" data-track="widget_engaged" aria-label="{{ c.cta.try_demo }}">
-          {{ c.cta.try_demo }}
+        <a href="/{{ lang }}/demo/" class="hidden sm:inline-flex btn-primary !px-5 !py-2.5 text-sm" data-testid="header-cta" data-track="hero_cta_click" data-track-payload='{"location":"header"}' aria-label="{{ c.cta.primary }}">
+          {{ c.cta.primary }}
         </a>
         <!-- Mobile Menu Button -->
         <button id="mobile-menu-btn" class="lg:hidden p-2 text-neutral-400 hover:text-white" aria-expanded="false" aria-label="Menu" data-testid="mobile-menu-btn">
@@ -47,8 +47,9 @@
         {% for key, label, url in nav_items %}
         <a href="{{ url }}" class="px-3 py-2.5 text-sm font-medium rounded-md {{ 'text-brand-accent-light bg-brand-accent/10' if page == key else 'text-neutral-400 hover:text-white hover:bg-white/5' }}">{{ label }}</a>
         {% endfor %}
-        <div class="mt-2 pt-2 border-t border-brand-border">
-          <a href="/{{ lang }}/demo/" class="btn-primary w-full text-center text-sm" data-track="widget_engaged">{{ c.cta.try_demo }}</a>
+        <div class="mt-2 pt-2 border-t border-brand-border space-y-2">
+          <a href="/{{ lang }}/demo/" class="btn-primary w-full text-center text-sm" data-track="hero_cta_click" data-track-payload='{"location":"mobile_menu"}'>{{ c.cta.primary }}</a>
+          <a href="/{{ lang }}/contact/" class="btn-secondary w-full text-center text-sm" data-track="secondary_cta_click" data-track-payload='{"location":"mobile_menu"}'>{{ c.cta.secondary }}</a>
         </div>
       </div>
     </div>

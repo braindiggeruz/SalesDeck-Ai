@@ -56,7 +56,7 @@
 
   {% block head_extra %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col" data-page="{{ page }}">
   {% include "partials/header.html" %}
 
   {% if breadcrumbs and breadcrumbs|length > 0 %}
@@ -82,6 +82,7 @@
 
   {% include "partials/footer.html" %}
   {% include "partials/consent.html" %}
+  {% include "partials/mobile_sticky.html" %}
 
   <!-- Scripts (deferred) -->
   <script src="/static/js/main.js" defer></script>

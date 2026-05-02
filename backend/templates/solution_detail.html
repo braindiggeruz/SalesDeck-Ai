@@ -9,13 +9,15 @@
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6" data-testid="solution-hero-title">{{ sol.hero_title }}</h1>
       <p class="text-lg text-neutral-400 leading-relaxed mb-8" data-testid="solution-hero-desc">{{ sol.hero_desc }}</p>
       <div class="flex flex-col sm:flex-row gap-4">
-        <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-cta-demo" data-track="widget_engaged">{{ c.cta.try_demo }}</a>
-        <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary" data-track="tg_start">{{ c.cta.turnkey }}</a>
+        <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-cta-demo" data-track="hero_cta_click" data-track-payload='{"location":"solution_detail","target":"demo"}'>{{ c.cta.primary }}</a>
+        <a href="/{{ lang }}/contact/" class="btn-secondary" data-testid="solution-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"location":"solution_detail","target":"contact"}'>{{ c.cta.secondary }}</a>
       </div>
+      <p class="text-xs text-neutral-500 mt-3">{{ c.cta_micro }}</p>
     </div>
   </div>
 </section>
 
+{% if sol.problems %}
 <!-- Problems -->
 <section class="section-padding bg-brand-surface border-y border-brand-border">
   <div class="section-container">
@@ -32,7 +34,9 @@
     </div>
   </div>
 </section>
+{% endif %}
 
+{% if sol.how_it_works %}
 <!-- How it works -->
 <section class="section-padding">
   <div class="section-container">
@@ -50,7 +54,9 @@
     </div>
   </div>
 </section>
+{% endif %}
 
+{% if sol.results %}
 <!-- Results -->
 <section class="section-padding bg-brand-surface border-y border-brand-border">
   <div class="section-container">
@@ -67,6 +73,7 @@
     </div>
   </div>
 </section>
+{% endif %}
 
 {% with cta_title = sol.name, cta_desc = sol.hero_desc[:120] ~ '...' %}
 {% include "partials/cta_block.html" %}
