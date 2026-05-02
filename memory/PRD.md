@@ -1,75 +1,114 @@
-# SalesDesk AI — PRD & Progress
+# SalesDesk AI — Product Requirements & Status
 
-## Problem Statement
-SEO-optimized multilingual (RU/DE) website for SalesDesk AI brand — AI Sales Bot 24/7 integrator.
-Goal: convert traffic (Meta Ads + organic) into NextBot referral signups and turnkey implementation requests.
+**Stack:** FastAPI + Jinja2 SSR · Tailwind (CLI compile) · MongoDB · Vanilla JS islands. Hosted on Emergent K8s (port 8001 backend / 3000 frontend; ingress maps `/api/*` to 8001).
 
-## Architecture
-- **Backend**: FastAPI + Jinja2 SSR (port 8001) — all HTML rendered server-side
-- **Frontend**: Express.js proxy (port 3000) → forwards to FastAPI
-- **CSS**: Tailwind CLI build (minified, no CDN)
-- **DB**: MongoDB (leads collection)
-- **i18n**: RU + DE with URL prefix structure (/ru/*, /de/*)
-- **Design**: Monochrome + Copper (#C47C3C / #E2A76F) premium palette
+**Languages:** RU + DE strict path-based routing (`/ru/*`, `/de/*`); root `/` = language chooser (`x-default`).
 
-## What's Been Implemented
+**Core flow:** Visit → понял боль → увидел выгоду → демо/Telegram/contact → лид в Mongo → менеджер закрывает.
 
-### Этап 1 (MVP) — 2026-03-01
-- All core pages (28+) in RU/DE
-- Full SEO package
-- Lead form with MongoDB
-- Analytics tracking
+---
 
-### v2 Audit & Polish — 2026-03-01
-- [x] **Design System v2**: Copper/Monochrome palette (removed cyan/teal)
-- [x] **DE Umlauts**: All German text uses proper ü ä ö ß (not ue ae oe ss)
-- [x] **OG Image**: Generated and connected to all pages via og:image meta
-- [x] **Lead Form Enhanced**: UTM params (source/medium/campaign/content/term), page_url, referrer, lead_type
-- [x] **Fluid Typography**: clamp() for H1/H2
-- [x] **CSS Variables**: Centralized color control via :root variables
-- [x] **Accessibility**: aria-labels on CTAs, focus-visible states
-- [x] **Consent**: DSGVO-compliant (analytics OFF by default for DE)
-- [x] **Forms.js**: UTM capture from URL, referrer tracking
-- [x] **SEO verified**: canonical, hreflang, x-default, schemas, OG on all pages
+## Phases delivered
 
-### Testing Results
-- v1: 100% backend, 95% frontend
-- v2: 98.7% backend, 100% frontend, 99.4% overall
+### Phase 1 — MVP (✅)
+SSR site, RU+DE i18n, all pages (Home, Solutions index + 7 niches, Pricing, Demo, Contact, About, Privacy, Terms, Blog, Cases, 404), `/api/lead` with rate-limit + honeypot + UTM/referrer capture, sitemap.xml + robots.txt + schema.org JSON-LD (Organization, WebSite, BreadcrumbList, FAQPage, SoftwareApplication, Article).
 
-## Prioritized Backlog
+### Phase 2 — Design V2 "Copper" (✅)
+Premium dark + Copper (#C47C3C) palette via Tailwind config; gradient text; card-hover; glow lines; consent banner; OG image generation (Gemini Nano Banana).
 
-### P0 (Next)
-- [ ] Connect real NextBot widget (NEXTBOT_REF_URL in .env)
-- [ ] Connect real Telegram bot URL (TELEGRAM_CTA_URL in .env)
-- [ ] Add GA4 + Meta Pixel IDs (GA4_ID, META_PIXEL_ID in .env)
-- [ ] Email/Telegram notifications on new leads (TELEGRAM_WEBHOOK / SMTP in .env)
+### Phase 3 — CRO Audit (✅, Feb 2026)
+Strategic 16-point text-only roadmap delivered to the user.
 
-### P1 (Этап 2)
-- [ ] 5 remaining niche detail pages (clinic, auto, food, real-estate, retail)
-- [ ] Cases page with real/anonymous case studies
-- [ ] 10+ more blog articles (outlines ready)
-- [ ] Blog category filtering
-- [ ] A/B testing for CTA copy
+### Phase 4 — CRO Uplift Batch (✅, Feb 2026 — current)
+Implemented in a single autonomous pass:
+1. New performance hero: "AI-бот отвечает клиентам за секунды — даже когда менеджер занят" + chat mockup (right column) with status badges.
+2. Unified CTA architecture: **Primary** "Получить демо"/"Demo anfordern" → /demo · **Secondary** "Обсудить запуск"/"Implementierung besprechen" → /contact · **Telegram escape link** (text, not button).
+3. Trust strip under hero (4 items, no fakes; with footnote about channel availability).
+4. "Сколько стоит медленный ответ?" / "Was kostet eine langsame Antwort?" cost-of-inaction block (3 cards).
+5. Flow timeline: 4 steps (User → AI → AI → Team) with role-coloured tags.
+6. **Pricing reordered:** Lite → **Pro (Рекомендуем/Empfohlen)** → Max; Self-Serve moved to a quiet secondary block at bottom; unified CTAs to `/contact/`.
+7. Pricing FAQ rewritten — 5 questions matching the brief.
+8. **Interactive demo page**: 4 scenarios (Salon/Clinic/Shop/Services) with animated mock chat (typing indicators, status transitions: New → Qualified → Handed). JSON data island + `/static/js/demo.js`.
+9. **Shorter contact form**: name + single contact field (Telegram/phone/email) + optional collapsible message + trust badges. CTA renamed to "Получить демо"/"Demo anfordern".
+10. **Mobile sticky CTA** (Demo + Telegram), revealed after scroll, auto-removed on `/contact/`.
+11. **Solution stubs**: niches without full content (clinic/auto/food/real-estate/retail) now render `solution_stub.html` (not 404) — proper hero + generic 3-step flow + CTAs.
+12. **About**: "Как мы работаем"/"So arbeiten wir" 3-step block + revised principles.
+13. **SEO**: meta titles/descriptions rewritten for conversion intent on Home/Pricing/Demo (RU+DE).
+14. **Lightweight analytics events** (`window.track`): `hero_cta_click`, `secondary_cta_click`, `demo_start`, `demo_scenario_select`, `demo_replay`, `demo_cta_click`, `pricing_plan_click`, `telegram_click`, `lead_form_submit`, `lead_form_success`, `faq_open`, `mobile_sticky_cta_click`, `scroll_50`, `scroll_90`. No-op safe when GA4/Pixel envs are unset.
+15. **Footer**: trust copy + Telegram link with track event + "Other-language" link.
+16. **Inline lead form** on home (single-step, 2 fields).
 
-### P2 (Backlog)
-- [ ] Multi-step lead qualification wizard
-- [ ] Blog search
-- [ ] Custom OG images per page/language
-- [ ] Performance audit (Core Web Vitals)
+**Test coverage:** `/app/backend/tests/test_cro_uplift.py` — pytest suite (39/39 pass) covering hero/trust/cost/flow/industries/stubs/pricing order + self-serve/FAQ/demo/contact/about/SEO/lead endpoint. Playwright verified demo auto-play, scenario switch, mobile sticky behaviour, FAQ toggle.
 
-## File Structure
+---
+
+## Architecture map
+
 ```
 /app/backend/
-  server.py           # FastAPI SSR app
-  config.py           # Central ENV config
+  server.py                      # FastAPI routes (incl. solution stub fallback)
+  config.py                      # ENV
   content/
-    __init__.py, ru.py, de.py, blog.py
+    ru.py, de.py                 # i18n dicts (full CRO copy)
+    blog.py
   templates/
-    base.html, partials/, page templates
+    base.html, home.html, pricing.html, demo.html, contact.html,
+    about.html, solutions_index.html, solution_detail.html, solution_stub.html,
+    blog_*.html, privacy.html, terms.html, 404.html, language_chooser.html
+    partials/
+      header.html, footer.html, consent.html
+      cta_block.html               # unified CTA pair
+      trust_strip.html             # NEW
+      mobile_sticky.html           # NEW
+      inline_lead_form.html        # NEW
   static/
-    css/style.css, js/main.js|forms.js|consent.js|track.js
+    css/style.css                  # Tailwind compiled output
+    js/
+      main.js, forms.js, consent.js
+      track.js                     # extended events + mobile-sticky reveal
+      demo.js                      # NEW (scenario picker + animated chat)
+  tests/
+    test_cro_uplift.py             # pytest 39 cases
 /app/frontend/
-  server.js           # Express proxy
-  tailwind.config.js  # Copper palette
-  src/input.css       # Tailwind components
+  tailwind.config.js, src/input.css
 ```
+
+## Env vars (all optional, graceful no-op when missing)
+- `MONGO_URL`, `DB_NAME` (required)
+- `SITE_URL` — used in canonicals/sitemap
+- `TELEGRAM_CTA_URL` — Telegram CTA destination (placeholder in preview env)
+- `NEXTBOT_REF_URL` — Self-Serve referral URL
+- `GA4_ID` / `META_PIXEL_ID` — analytics (when set, consent-gated load via `consent.js`)
+
+## Key API
+- `GET /` (language chooser)
+- `GET /{lang}/`, `/{lang}/pricing/`, `/{lang}/demo/`, `/{lang}/solutions/`, `/{lang}/solutions/{slug}/` (full or stub), `/{lang}/about/`, `/{lang}/contact/`, `/{lang}/blog/`, `/{lang}/blog/{slug}/`, `/{lang}/cases/`, `/{lang}/privacy/`, `/{lang}/terms/`
+- `POST /api/lead` (5/min rate-limit, honeypot)
+- `GET /sitemap.xml`, `/robots.txt`, `/api/health`
+
+---
+
+## Backlog
+
+### P1 — Conversion follow-ups
+- Telegram webhook for lead notifications to internal chat.
+- Multi-step progressive form on /contact/ (step 2 after submit collects niche+message).
+- Lead-magnet PDF (chat-bot launch checklist) gated by email.
+- Validation in real time (phone/email format) on contact form.
+- A/B test framework when GA4 data starts flowing.
+
+### P2 — Content depth
+- Full pages for clinic/auto/food/real-estate/retail (replace stubs with niche-specific problems/how/results).
+- Cases section: 3–5 anonymised success scenarios.
+- 5 cornerstone blog articles with internal links to pricing.
+- Currency display switcher (EUR/USD/UZS) on pricing.
+- Pricing comparison table (features × packages).
+
+### P3 — Optimisation
+- Lighthouse pass to reach CWV "Good" across the board.
+- Replace placeholder `TELEGRAM_CTA_URL` and `NEXTBOT_REF_URL` in production env.
+- Schema `Offer.price` numeric normalisation (currently keeps "от $149" string).
+
+---
+
+**Last update:** Feb 2026 — Phase 4 (CRO Uplift Batch) completed and tested.
