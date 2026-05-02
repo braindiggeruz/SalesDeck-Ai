@@ -13,6 +13,7 @@ META_PIXEL_ID = os.environ.get("META_PIXEL_ID", "")
 LEADS_EMAIL = os.environ.get("LEADS_EMAIL", "")
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_LEAD_CHAT_ID = os.environ.get("TELEGRAM_LEAD_CHAT_ID", "")
+TELEGRAM_WEBHOOK_SECRET = os.environ.get("TELEGRAM_WEBHOOK_SECRET", "")
 
 SUPPORTED_LANGS = ["ru", "de"]
 DEFAULT_LANG = "ru"

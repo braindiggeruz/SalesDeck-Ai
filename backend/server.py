@@ -1,11 +1,14 @@
 import os
 import json
 import logging
+import re
+import uuid
+import asyncio
 from datetime import datetime, timezone
 from typing import Optional
 
 import httpx
-from fastapi import FastAPI, Request, Form, HTTPException
+from fastapi import FastAPI, Request, Form, HTTPException, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, Response, JSONResponse
@@ -21,7 +24,7 @@ load_dotenv()
 from config import (
     MONGO_URL, DB_NAME, SITE_URL, NEXTBOT_REF_URL,
     TELEGRAM_CTA_URL, GA4_ID, META_PIXEL_ID, SUPPORTED_LANGS, DEFAULT_LANG,
-    TELEGRAM_BOT_TOKEN, TELEGRAM_LEAD_CHAT_ID
+    TELEGRAM_BOT_TOKEN, TELEGRAM_LEAD_CHAT_ID, TELEGRAM_WEBHOOK_SECRET
 )
 from content import get_content
 from content.blog import BLOG_POSTS
@@ -409,7 +412,7 @@ async def submit_lead(request: Request):
         form = await request.form()
         data = dict(form)
 
-    # Honeypot check
+    # Honeypot check (silent ok)
     if data.get("website"):
         return JSONResponse({"status": "ok"})
 
@@ -428,7 +431,9 @@ async def submit_lead(request: Request):
     if len(name) > 200 or len(phone) > 100 or len(message) > 2000:
         return JSONResponse(status_code=400, content={"error": "input too long"})
 
+    lead_id = uuid.uuid4().hex[:12]  # short id, used in callback_data + Pixel eventID
     lead = {
+        "lead_id": lead_id,
         "name": name,
         "phone": phone,
         "business": business,
@@ -443,58 +448,240 @@ async def submit_lead(request: Request):
         "utm_campaign": str(data.get("utm_campaign", "")).strip(),
         "utm_content": str(data.get("utm_content", "")).strip(),
         "utm_term": str(data.get("utm_term", "")).strip(),
+        "status": "new",
+        "telegram_sent": False,
+        "telegram_message_id": None,
+        "telegram_error": None,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     leads_col.insert_one(lead)
 
-    # Async-fire Telegram notification (best-effort, never breaks lead flow)
-    await notify_telegram_lead(lead)
+    # Best-effort Telegram notification — never breaks lead flow.
+    try:
+        await notify_telegram_lead(lead)
+    except Exception as e:
+        logger.warning("Telegram notify outer error: %s", type(e).__name__)
 
-    return JSONResponse({"status": "ok", "message": "Lead received"})
+    # Return lead_id so the frontend can use it as Pixel eventID for dedup with future CAPI.
+    return JSONResponse({"status": "ok", "lead_id": lead_id, "message": "Lead received"})
 
 
-# --- Telegram notification helper ---
+# --- Telegram: helpers ---
+
+# In-memory dedup of callback_query_id (~5 min TTL) to avoid replay spam.
+_callback_dedup: dict = {}
+
+def _safe_text(s) -> str:
+    if not s:
+        return ""
+    s = str(s)
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+def _build_contact_url(phone: str) -> Optional[str]:
+    """Return a tel:/mailto:/t.me URL only when contact is unambiguously parseable."""
+    if not phone:
+        return None
+    p = phone.strip()
+    if p.startswith("@") and re.match(r"^@[A-Za-z0-9_]{4,32}$", p):
+        return f"https://t.me/{p[1:]}"
+    if "@" in p and re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", p):
+        return f"mailto:{p}"
+    digits = re.sub(r"[^\d+]", "", p)
+    if re.match(r"^\+?\d{7,15}$", digits):
+        return f"tel:{digits}"
+    return None
+
+STATUS_LABEL = {
+    "new":       "🟢 Новая",
+    "processed": "✅ Обработана",
+    "archived":  "🗄 В архиве",
+}
+
+def _build_keyboard(lead_id: str, status: str, contact_url: Optional[str]):
+    rows = []
+    if contact_url:
+        rows.append([{"text": "💬 Связаться", "url": contact_url}])
+    if status == "new":
+        rows.append([
+            {"text": "✅ Обработано", "callback_data": f"done:{lead_id}"},
+            {"text": "🗄 Архив",       "callback_data": f"arch:{lead_id}"},
+        ])
+    elif status == "processed":
+        rows.append([
+            {"text": "↩️ Вернуть в работу", "callback_data": f"back:{lead_id}"},
+            {"text": "🗄 Архив",            "callback_data": f"arch:{lead_id}"},
+        ])
+    elif status == "archived":
+        rows.append([
+            {"text": "↩️ Вернуть в работу", "callback_data": f"back:{lead_id}"},
+        ])
+    return {"inline_keyboard": rows}
+
+def _format_lead_text(lead: dict, status: str = "new") -> str:
+    lang = lead.get("lang", "")
+    flag = "🇷🇺" if lang == "ru" else ("🇩🇪" if lang == "de" else "🌐")
+    utm_bits = []
+    for k in ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"):
+        v = lead.get(k)
+        if v:
+            utm_bits.append(f"<i>{_safe_text(k)}</i>: {_safe_text(v)}")
+    utm_block = ("\n" + " · ".join(utm_bits)) if utm_bits else ""
+    referrer = lead.get("referrer") or "—"
+
+    return (
+        f"{flag} <b>Новая заявка · SalesDesk AI</b>\n"
+        f"<i>Статус: {STATUS_LABEL.get(status, status)}</i>\n"
+        f"━━━━━━━━━━━━━━━\n"
+        f"👤 <b>Имя:</b> {_safe_text(lead.get('name'))}\n"
+        f"📞 <b>Контакт:</b> <code>{_safe_text(lead.get('phone'))}</code>\n"
+        f"🏷 <b>Ниша:</b> {_safe_text(lead.get('business') or '—')}\n"
+        f"🎯 <b>Тип:</b> {_safe_text(lead.get('lead_type'))}\n"
+        f"📍 <b>Источник:</b> {_safe_text(lead.get('source'))}\n"
+        f"💬 <b>Сообщение:</b> {_safe_text(lead.get('message') or '—')}\n"
+        f"🔗 <b>Страница:</b> {_safe_text(lead.get('page_url'))}\n"
+        f"↩️ <b>Referrer:</b> {_safe_text(referrer)}"
+        f"{utm_block}\n"
+        f"🕐 {_safe_text(lead.get('created_at'))}\n"
+        f"<code>id: {_safe_text(lead.get('lead_id'))}</code>"
+    )
+
+async def _telegram_post(method: str, payload: dict, retries: int = 2) -> Optional[dict]:
+    """POST to Telegram Bot API with timeout + small retry. Returns response JSON or None on failure."""
+    if not TELEGRAM_BOT_TOKEN:
+        return None
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/{method}"
+    last_err = None
+    for attempt in range(retries + 1):
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                r = await client.post(url, json=payload)
+            if r.status_code == 200:
+                data = r.json()
+                if data.get("ok"):
+                    return data
+                last_err = f"telegram_not_ok:{data.get('error_code')}"
+                # Don't retry on 4xx client errors (chat_not_found, blocked etc.)
+                if data.get("error_code") and 400 <= data["error_code"] < 500:
+                    break
+            else:
+                last_err = f"http_{r.status_code}"
+                if 400 <= r.status_code < 500:
+                    break
+        except (httpx.TimeoutException, httpx.TransportError) as e:
+            last_err = f"net_{type(e).__name__}"
+        except Exception as e:
+            last_err = f"err_{type(e).__name__}"
+        if attempt < retries:
+            await asyncio.sleep(0.5 * (attempt + 1))
+    logger.warning("Telegram %s failed: %s", method, last_err)
+    return None
+
 async def notify_telegram_lead(lead: dict):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_LEAD_CHAT_ID:
         return
-    try:
-        lang_flag = "🇷🇺" if lead.get("lang") == "ru" else ("🇩🇪" if lead.get("lang") == "de" else "🌐")
-        biz = lead.get("business") or "—"
-        msg = lead.get("message") or "—"
-        utm_bits = []
-        for k in ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"):
-            v = lead.get(k)
-            if v:
-                utm_bits.append(f"<i>{k}</i>: {v}")
-        utm_block = ("\n" + " · ".join(utm_bits)) if utm_bits else ""
-
-        text = (
-            f"{lang_flag} <b>Новая заявка · SalesDesk AI</b>\n"
-            f"━━━━━━━━━━━━━━━\n"
-            f"👤 <b>Имя:</b> {lead.get('name','')}\n"
-            f"📞 <b>Контакт:</b> <code>{lead.get('phone','')}</code>\n"
-            f"🏷 <b>Ниша:</b> {biz}\n"
-            f"🎯 <b>Тип:</b> {lead.get('lead_type','')}\n"
-            f"📍 <b>Источник:</b> {lead.get('source','')}\n"
-            f"💬 <b>Сообщение:</b> {msg}\n"
-            f"🔗 <b>Страница:</b> {lead.get('page_url','')}\n"
-            f"↩️ <b>Referrer:</b> {lead.get('referrer','—') or '—'}"
-            f"{utm_block}\n"
-            f"🕐 {lead.get('created_at','')}"
+    text = _format_lead_text(lead, "new")
+    keyboard = _build_keyboard(lead["lead_id"], "new", _build_contact_url(lead.get("phone")))
+    payload = {
+        "chat_id": TELEGRAM_LEAD_CHAT_ID,
+        "text": text,
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True,
+        "reply_markup": keyboard,
+    }
+    resp = await _telegram_post("sendMessage", payload)
+    if resp and resp.get("ok"):
+        msg_id = resp.get("result", {}).get("message_id")
+        leads_col.update_one(
+            {"lead_id": lead["lead_id"]},
+            {"$set": {
+                "telegram_sent": True,
+                "telegram_message_id": msg_id,
+                "telegram_chat_id": TELEGRAM_LEAD_CHAT_ID,
+            }}
+        )
+    else:
+        leads_col.update_one(
+            {"lead_id": lead["lead_id"]},
+            {"$set": {"telegram_sent": False, "telegram_error": "send_failed"}}
         )
 
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            r = await client.post(url, json={
-                "chat_id": TELEGRAM_LEAD_CHAT_ID,
-                "text": text,
-                "parse_mode": "HTML",
-                "disable_web_page_preview": True,
-            })
-            if r.status_code != 200:
-                logger.warning("Telegram notify failed: %s %s", r.status_code, r.text[:200])
-    except Exception as e:
-        logger.warning("Telegram notify error: %s", e)
+
+# --- Telegram: callback webhook (manager buttons) ---
+@app.post("/api/telegram/webhook")
+async def telegram_webhook(
+    request: Request,
+    x_telegram_bot_api_secret_token: Optional[str] = Header(default=None),
+):
+    # Require secret token. If TELEGRAM_WEBHOOK_SECRET not configured, refuse all.
+    if not TELEGRAM_WEBHOOK_SECRET or x_telegram_bot_api_secret_token != TELEGRAM_WEBHOOK_SECRET:
+        raise HTTPException(status_code=403, detail="forbidden")
+
+    try:
+        update = await request.json()
+    except Exception:
+        return JSONResponse({"ok": True})
+
+    cb = update.get("callback_query")
+    if not cb:
+        return JSONResponse({"ok": True})
+
+    cb_id = cb.get("id")
+    if not cb_id:
+        return JSONResponse({"ok": True})
+
+    # Replay protection (in-memory, ~5 min TTL)
+    now = datetime.now(timezone.utc).timestamp()
+    expired = [k for k, ts in _callback_dedup.items() if now - ts > 300]
+    for k in expired:
+        _callback_dedup.pop(k, None)
+    if cb_id in _callback_dedup:
+        return JSONResponse({"ok": True})
+    _callback_dedup[cb_id] = now
+
+    raw = (cb.get("data") or "").strip()
+    if ":" not in raw:
+        await _telegram_post("answerCallbackQuery", {"callback_query_id": cb_id, "text": "Invalid"})
+        return JSONResponse({"ok": True})
+
+    action, lead_id = raw.split(":", 1)
+    if not re.match(r"^[a-f0-9]{6,32}$", lead_id) or action not in ("done", "arch", "back"):
+        await _telegram_post("answerCallbackQuery", {"callback_query_id": cb_id, "text": "Invalid"})
+        return JSONResponse({"ok": True})
+
+    new_status = {"done": "processed", "arch": "archived", "back": "new"}[action]
+    actor = (cb.get("from") or {}).get("username") or str((cb.get("from") or {}).get("id") or "")
+
+    lead = leads_col.find_one({"lead_id": lead_id}, {"_id": 0})
+    if not lead:
+        await _telegram_post("answerCallbackQuery", {"callback_query_id": cb_id, "text": "Lead not found", "show_alert": True})
+        return JSONResponse({"ok": True})
+
+    leads_col.update_one(
+        {"lead_id": lead_id},
+        {"$set": {"status": new_status, "status_updated_at": datetime.now(timezone.utc).isoformat(), "status_actor": actor}}
+    )
+    lead["status"] = new_status
+
+    msg = cb.get("message") or {}
+    chat_id = (msg.get("chat") or {}).get("id")
+    msg_id = msg.get("message_id")
+
+    # Edit message text + keyboard to reflect new status
+    if chat_id and msg_id:
+        await _telegram_post("editMessageText", {
+            "chat_id": chat_id,
+            "message_id": msg_id,
+            "text": _format_lead_text(lead, new_status),
+            "parse_mode": "HTML",
+            "disable_web_page_preview": True,
+            "reply_markup": _build_keyboard(lead_id, new_status, _build_contact_url(lead.get("phone"))),
+        })
+
+    await _telegram_post("answerCallbackQuery", {
+        "callback_query_id": cb_id,
+        "text": f"Статус: {STATUS_LABEL.get(new_status, new_status)}",
+    })
+    return JSONResponse({"ok": True})
 
 
 # --- Sitemap ---

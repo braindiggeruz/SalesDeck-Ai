@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Parse UTM params from URL
   function getUtmParams() {
     var params = new URLSearchParams(window.location.search);
     return {
@@ -13,16 +12,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var forms = document.querySelectorAll('form[data-enhanced]');
   forms.forEach(function(form) {
+    var submitting = false;          // in-flight guard
+    var alreadySucceeded = false;    // hard guard against double-Lead (manual resubmit after success)
+
     form.addEventListener('submit', function(e) {
-      // Check honeypot
+      // Honeypot
       var hp = form.querySelector('input[name="website"]');
       if (hp && hp.value) {
         e.preventDefault();
         return;
       }
-
-      // Progressive: if JS works, use fetch; otherwise fallback to normal submit
       e.preventDefault();
+
+      if (submitting || alreadySucceeded) return;
+      submitting = true;
 
       var submitBtn = form.querySelector('button[type="submit"]');
       var successEl = form.querySelector('[data-form-success]');
@@ -31,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (submitBtn) {
         submitBtn.disabled = true;
+        submitBtn.setAttribute('aria-busy', 'true');
         submitBtn.textContent = '...';
       }
       if (successEl) successEl.classList.add('hidden');
@@ -42,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (key !== 'website') data[key] = value;
       });
 
-      // Add UTM, referrer, page_url
       var utm = getUtmParams();
       Object.keys(utm).forEach(function(k) { data[k] = utm[k]; });
       data.page_url = window.location.href;
@@ -57,21 +60,35 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!res.ok) throw new Error('Server error');
         return res.json();
       })
-      .then(function() {
+      .then(function(json) {
+        alreadySucceeded = true;
         if (successEl) successEl.classList.remove('hidden');
         form.reset();
         if (typeof window.track === 'function') {
-          window.track('lead_form_success', { source: data.source || 'contact_form' });
+          window.track('lead_form_success', {
+            source: data.source || 'contact_form',
+            lead_type: data.lead_type || '',
+            business_type: data.business || '',
+            lead_id: (json && json.lead_id) || ''
+          });
+        }
+        // Disable submit permanently after success to prevent duplicate Lead events
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.removeAttribute('aria-busy');
+          submitBtn.textContent = originalText;
         }
       })
       .catch(function() {
         if (errorEl) errorEl.classList.remove('hidden');
-      })
-      .finally(function() {
         if (submitBtn) {
           submitBtn.disabled = false;
+          submitBtn.removeAttribute('aria-busy');
           submitBtn.textContent = originalText;
         }
+      })
+      .finally(function() {
+        submitting = false;
       });
     });
   });

@@ -18,7 +18,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             {{ p.hero_cta_primary }}
           </a>
-          <a href="/{{ lang }}/contact/" class="btn-secondary text-base" data-testid="hero-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"location":"hero","target":"contact"}' aria-label="{{ p.hero_cta_secondary }}">{{ p.hero_cta_secondary }}</a>
+          <a href="/{{ lang }}/contact/" class="btn-secondary text-base" data-testid="hero-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"cta_location":"hero","target":"contact"}' aria-label="{{ p.hero_cta_secondary }}">{{ p.hero_cta_secondary }}</a>
         </div>
         <p class="text-xs text-neutral-500 mt-4" data-testid="hero-microcopy">{{ c.cta_micro }}</p>
       </div>
@@ -180,7 +180,7 @@
       {% endfor %}
     </ol>
     <div class="text-center mt-10">
-      <a href="/{{ lang }}/demo/" class="btn-primary text-sm" data-testid="flow-demo-cta" data-track="hero_cta_click" data-track-payload='{"location":"flow","target":"demo"}'>{{ c.cta.primary }}</a>
+      <a href="/{{ lang }}/demo/" class="btn-primary text-sm" data-testid="flow-demo-cta" data-track="hero_cta_click" data-track-payload='{"cta_location":"flow","target":"demo"}'>{{ c.cta.primary }}</a>
     </div>
   </div>
 </section>

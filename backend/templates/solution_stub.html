@@ -10,8 +10,8 @@
       <p class="text-lg text-neutral-400 leading-relaxed mb-2" data-testid="solution-stub-desc">{{ sol.hero_desc or sol.short_desc }}</p>
       <p class="text-sm text-brand-accent-light/80 italic mb-8">{{ sol.use_case or c.solutions.generic_use_case }}</p>
       <div class="flex flex-col sm:flex-row gap-4">
-        <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-stub-cta-demo" data-track="hero_cta_click" data-track-payload='{"location":"solution_stub","target":"demo"}'>{{ c.cta.primary }}</a>
-        <a href="/{{ lang }}/contact/" class="btn-secondary" data-testid="solution-stub-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"location":"solution_stub","target":"contact"}'>{{ c.cta.secondary }}</a>
+        <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-stub-cta-demo" data-track="hero_cta_click" data-track-payload='{"cta_location":"solution_stub","target":"demo"}'>{{ c.cta.primary }}</a>
+        <a href="/{{ lang }}/contact/" class="btn-secondary" data-testid="solution-stub-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"cta_location":"solution_stub","target":"contact"}'>{{ c.cta.secondary }}</a>
       </div>
       <p class="text-xs text-neutral-500 mt-3">{{ c.cta_micro }}</p>
     </div>

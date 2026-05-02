@@ -28,7 +28,7 @@
             {% if loop.first %}bg-brand-accent/10 border-brand-accent/40 text-white{% else %}bg-brand-card border-brand-border text-neutral-400 hover:text-white hover:border-brand-accent/30{% endif %}"
           data-testid="demo-scenario-{{ sc.id }}"
           data-track="demo_scenario_select"
-          data-track-payload='{"scenario":"{{ sc.id }}"}'>
+          data-track-payload='{"scenario_name":"{{ sc.id }}"}'>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-brand-accent-light">
             {% if sc.icon == 'sparkles' %}<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>{% elif sc.icon == 'heart-pulse' %}<path d="M19.5 12.572l-7.5 7.428l-7.5-7.428A5 5 0 1 1 12 6.006a5 5 0 1 1 7.5 6.572"/>{% elif sc.icon == 'shopping-bag' %}<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>{% else %}<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>{% endif %}
           </svg>
@@ -79,7 +79,7 @@
     <div class="flex flex-col sm:flex-row gap-3 justify-center">
       <a href="/{{ lang }}/contact/" class="btn-primary text-sm" data-testid="demo-after-contact" data-track="demo_cta_click" data-track-payload='{"target":"contact"}'>{{ c.demo.after_demo_cta }}</a>
       {% if telegram_url %}
-      <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary text-sm" data-testid="demo-after-telegram" data-track="telegram_click" data-track-payload='{"location":"demo_after"}'>{{ c.demo.after_demo_telegram }}</a>
+      <a href="{{ telegram_url }}" target="_blank" rel="noopener" class="btn-secondary text-sm" data-testid="demo-after-telegram" data-track="telegram_click" data-track-payload='{"cta_location":"demo_after"}'>{{ c.demo.after_demo_telegram }}</a>
       {% endif %}
     </div>
   </div>

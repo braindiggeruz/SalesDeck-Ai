@@ -9,8 +9,8 @@
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6" data-testid="solution-hero-title">{{ sol.hero_title }}</h1>
       <p class="text-lg text-neutral-400 leading-relaxed mb-8" data-testid="solution-hero-desc">{{ sol.hero_desc }}</p>
       <div class="flex flex-col sm:flex-row gap-4">
-        <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-cta-demo" data-track="hero_cta_click" data-track-payload='{"location":"solution_detail","target":"demo"}'>{{ c.cta.primary }}</a>
-        <a href="/{{ lang }}/contact/" class="btn-secondary" data-testid="solution-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"location":"solution_detail","target":"contact"}'>{{ c.cta.secondary }}</a>
+        <a href="/{{ lang }}/demo/" class="btn-primary" data-testid="solution-cta-demo" data-track="hero_cta_click" data-track-payload='{"cta_location":"solution_detail","target":"demo"}'>{{ c.cta.primary }}</a>
+        <a href="/{{ lang }}/contact/" class="btn-secondary" data-testid="solution-cta-secondary" data-track="secondary_cta_click" data-track-payload='{"cta_location":"solution_detail","target":"contact"}'>{{ c.cta.secondary }}</a>
       </div>
       <p class="text-xs text-neutral-500 mt-3">{{ c.cta_micro }}</p>
     </div>
