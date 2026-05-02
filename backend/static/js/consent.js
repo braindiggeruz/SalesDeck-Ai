@@ -18,6 +18,7 @@
     var ga4Id = document.documentElement.getAttribute('data-ga4');
     var pixelId = document.documentElement.getAttribute('data-pixel');
 
+    // --- Google Analytics 4 (gtag.js) ---
     if (ga4Id) {
       var s = document.createElement('script');
       s.async = true;
@@ -26,9 +27,13 @@
       window.dataLayer = window.dataLayer || [];
       window.gtag = function() { dataLayer.push(arguments); };
       gtag('js', new Date());
-      gtag('config', ga4Id, { send_page_view: true });
+      gtag('config', ga4Id, {
+        send_page_view: true,
+        anonymize_ip: true
+      });
     }
 
+    // --- Meta Pixel ---
     if (pixelId) {
       !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -37,6 +42,11 @@
       document,'script','https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', pixelId);
       fbq('track', 'PageView');
+    }
+
+    // Notify track.js to flush its queue
+    if (typeof window.__onAnalyticsReady === 'function') {
+      window.__onAnalyticsReady();
     }
   }
 
@@ -54,7 +64,6 @@
       return;
     }
 
-    // Show banner
     var banner = document.getElementById('consent-banner');
     if (banner) banner.classList.remove('hidden');
 

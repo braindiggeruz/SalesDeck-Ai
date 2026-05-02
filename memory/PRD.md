@@ -111,4 +111,25 @@ Implemented in a single autonomous pass:
 
 ---
 
-**Last update:** Feb 2026 — Phase 4 (CRO Uplift Batch) completed and tested.
+**Last update:** Feb 2026 — Phase 4 (CRO Uplift Batch) + Phase 5 (Analytics & Telegram lead webhook) completed and tested.
+
+---
+
+## Phase 5 — Analytics & Telegram lead webhook (✅, Feb 2026)
+
+- **GA4** installed (`G-WFZ1VRG0Y7`) — consent-gated load via `consent.js`. `gtag('config', { send_page_view: true, anonymize_ip: true })`.
+- **Meta Pixel** installed (`1296661992555792`) — consent-gated load + `<noscript>` fallback in `base.html`. Standard events mapped:
+  - `lead_form_success` → **Lead**
+  - `telegram_click` → **Contact**
+  - `demo_start`, `demo_scenario_select`, `hero_cta_click` → **ViewContent**
+  - `demo_cta_click`, `pricing_plan_click` → **InitiateCheckout**
+  - All events also fire as `trackCustom` for granular Pixel reports.
+- **Event queue** in `track.js`: events fired before consent are buffered (max 50) and flushed via `__onAnalyticsReady` after user accepts cookies — so we don't lose hero/scroll events.
+- **Telegram lead webhook** (`server.py` → `notify_telegram_lead`): every successful `/api/lead` insert posts a formatted HTML message to the bot's group chat. Includes name, contact, niche, lead_type, source, message, page URL, referrer, UTMs, timestamp. Best-effort, never blocks the lead flow.
+
+**New env vars:**
+- `TELEGRAM_BOT_TOKEN` — bot API token (`@salesdeskbot`)
+- `TELEGRAM_LEAD_CHAT_ID` — supergroup ID `-1003903783094` ("Sales Desk Заявки")
+- `GA4_ID=G-WFZ1VRG0Y7`
+- `META_PIXEL_ID=1296661992555792`
+- `TELEGRAM_CTA_URL=https://t.me/salesdeskbot` (was placeholder)

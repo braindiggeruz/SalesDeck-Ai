@@ -1,20 +1,63 @@
-// Lightweight event tracking — no-op safe if GA4/Pixel not loaded
+// Lightweight event tracking — consent-gated.
+// GA4 + Meta Pixel are loaded by consent.js after user accepts cookies.
+// All track() calls before consent are queued and replayed.
 (function() {
-  function safeGtag(event, payload) {
+  var queue = [];
+  var consentGranted = false;
+
+  // Map our internal event names to FB Pixel STANDARD events (better attribution).
+  // Everything else falls back to fbq('trackCustom', ...).
+  var FB_STANDARD_EVENTS = {
+    'lead_form_success': 'Lead',
+    'telegram_click':    'Contact',
+    'demo_start':        'ViewContent',
+    'demo_scenario_select': 'ViewContent',
+    'demo_cta_click':    'InitiateCheckout',
+    'pricing_plan_click': 'InitiateCheckout',
+    'hero_cta_click':    'ViewContent'
+  };
+
+  function fireGA(name, payload) {
     if (typeof window.gtag === 'function') {
-      try { window.gtag('event', event, payload); } catch (e) {}
+      try { window.gtag('event', name, payload || {}); } catch (e) {}
     }
   }
-  function safeFbq(event, payload) {
-    if (typeof window.fbq === 'function') {
-      try { window.fbq('trackCustom', event, payload); } catch (e) {}
-    }
+  function fireFB(name, payload) {
+    if (typeof window.fbq !== 'function') return;
+    try {
+      var standard = FB_STANDARD_EVENTS[name];
+      if (standard) {
+        // Pixel standard events accept currency/value when applicable; we omit since price is variable.
+        window.fbq('track', standard, payload || {});
+      }
+      // Always also send a custom event with the original name — useful for granular segmentation.
+      window.fbq('trackCustom', name, payload || {});
+    } catch (e) {}
+  }
+
+  function fire(name, payload) {
+    fireGA(name, payload);
+    fireFB(name, payload);
   }
 
   window.track = function(event, payload) {
     payload = payload || {};
-    safeGtag(event, payload);
-    safeFbq(event, payload);
+    if (consentGranted) {
+      fire(event, payload);
+    } else {
+      // queue until consent (or no-op forever if user declines)
+      queue.push([event, payload]);
+      if (queue.length > 50) queue.shift();
+    }
+  };
+
+  // Called by consent.js once analytics are loaded
+  window.__onAnalyticsReady = function() {
+    consentGranted = true;
+    while (queue.length) {
+      var ev = queue.shift();
+      fire(ev[0], ev[1]);
+    }
   };
 
   // Click events via data-track
@@ -50,11 +93,10 @@
     if (!fired['90'] && d >= 90) { fired['90'] = true; window.track('scroll_90'); }
   }, { passive: true });
 
-  // Mobile sticky CTA: reveal after small scroll, hide on form/contact pages where it overlaps
+  // Mobile sticky CTA: reveal after small scroll, hide on contact page
   document.addEventListener('DOMContentLoaded', function() {
     var sticky = document.getElementById('mobile-sticky');
     if (!sticky) return;
-    // hide on contact page (sticky overlaps form CTA)
     if (document.body.getAttribute('data-page') === 'contact') {
       sticky.remove();
       return;
@@ -69,7 +111,6 @@
     window.addEventListener('scroll', function() {
       if (window.pageYOffset > 200) reveal();
     }, { passive: true });
-    // also reveal after 4s for short pages
     setTimeout(function() {
       if ((document.documentElement.scrollHeight - window.innerHeight) < 400) reveal();
     }, 4000);

@@ -11,6 +11,8 @@ TELEGRAM_CTA_URL = os.environ.get("TELEGRAM_CTA_URL", "")
 GA4_ID = os.environ.get("GA4_ID", "")
 META_PIXEL_ID = os.environ.get("META_PIXEL_ID", "")
 LEADS_EMAIL = os.environ.get("LEADS_EMAIL", "")
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_LEAD_CHAT_ID = os.environ.get("TELEGRAM_LEAD_CHAT_ID", "")
 
 SUPPORTED_LANGS = ["ru", "de"]
 DEFAULT_LANG = "ru"

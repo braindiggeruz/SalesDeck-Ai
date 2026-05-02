@@ -1,8 +1,10 @@
 import os
 import json
+import logging
 from datetime import datetime, timezone
 from typing import Optional
 
+import httpx
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -18,10 +20,13 @@ load_dotenv()
 
 from config import (
     MONGO_URL, DB_NAME, SITE_URL, NEXTBOT_REF_URL,
-    TELEGRAM_CTA_URL, GA4_ID, META_PIXEL_ID, SUPPORTED_LANGS, DEFAULT_LANG
+    TELEGRAM_CTA_URL, GA4_ID, META_PIXEL_ID, SUPPORTED_LANGS, DEFAULT_LANG,
+    TELEGRAM_BOT_TOKEN, TELEGRAM_LEAD_CHAT_ID
 )
 from content import get_content
 from content.blog import BLOG_POSTS
+
+logger = logging.getLogger("salesdesk")
 
 # --- App ---
 app = FastAPI(docs_url=None, redoc_url=None)
@@ -442,7 +447,54 @@ async def submit_lead(request: Request):
     }
     leads_col.insert_one(lead)
 
+    # Async-fire Telegram notification (best-effort, never breaks lead flow)
+    await notify_telegram_lead(lead)
+
     return JSONResponse({"status": "ok", "message": "Lead received"})
+
+
+# --- Telegram notification helper ---
+async def notify_telegram_lead(lead: dict):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_LEAD_CHAT_ID:
+        return
+    try:
+        lang_flag = "🇷🇺" if lead.get("lang") == "ru" else ("🇩🇪" if lead.get("lang") == "de" else "🌐")
+        biz = lead.get("business") or "—"
+        msg = lead.get("message") or "—"
+        utm_bits = []
+        for k in ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"):
+            v = lead.get(k)
+            if v:
+                utm_bits.append(f"<i>{k}</i>: {v}")
+        utm_block = ("\n" + " · ".join(utm_bits)) if utm_bits else ""
+
+        text = (
+            f"{lang_flag} <b>Новая заявка · SalesDesk AI</b>\n"
+            f"━━━━━━━━━━━━━━━\n"
+            f"👤 <b>Имя:</b> {lead.get('name','')}\n"
+            f"📞 <b>Контакт:</b> <code>{lead.get('phone','')}</code>\n"
+            f"🏷 <b>Ниша:</b> {biz}\n"
+            f"🎯 <b>Тип:</b> {lead.get('lead_type','')}\n"
+            f"📍 <b>Источник:</b> {lead.get('source','')}\n"
+            f"💬 <b>Сообщение:</b> {msg}\n"
+            f"🔗 <b>Страница:</b> {lead.get('page_url','')}\n"
+            f"↩️ <b>Referrer:</b> {lead.get('referrer','—') or '—'}"
+            f"{utm_block}\n"
+            f"🕐 {lead.get('created_at','')}"
+        )
+
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            r = await client.post(url, json={
+                "chat_id": TELEGRAM_LEAD_CHAT_ID,
+                "text": text,
+                "parse_mode": "HTML",
+                "disable_web_page_preview": True,
+            })
+            if r.status_code != 200:
+                logger.warning("Telegram notify failed: %s %s", r.status_code, r.text[:200])
+    except Exception as e:
+        logger.warning("Telegram notify error: %s", e)
 
 
 # --- Sitemap ---
