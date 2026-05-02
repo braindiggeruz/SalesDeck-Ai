@@ -1,0 +1,113 @@
+<analysis>**original_problem_statement:** 
+Build a fully SEO-optimized, multilingual (RU/DE) multipage website for SalesDesk AI (AI Sales Bot). Must be SSR (FastAPI + Jinja2 + Tailwind) with no SPA. Needs to prioritize Core Web Vitals, JSON-LD Schema, and high conversion. 
+Phase 1 (MVP) and Phase 2 (Design V2 Copper Overhaul) are completed. The current request is to act as a Senior CRO Strategist/UX Auditor and generate a comprehensive text-only CRO Roadmap based on a strict 16-point structure.
+
+**User's preferred language**: **Russian** (You MUST respond in Russian only, maintaining the expert tone requested by the user).
+
+**what currently exists?** 
+A fully functional, fast, and SEO-optimized FastAPI + Jinja2 SSR website. It features a premium Monochrome + Copper design system (Tailwind), strict multi-language routing (/ru/, /de/) with a root language chooser, fully functional server-side lead forms with UTM tracking (saving to MongoDB), and all technical SEO elements (Canonical, hreflang, dynamic OG images, schema.org).
+
+**Last working item**: 
+    - Last item agent was working: Agent was reading  and  to gather context about the current copy, structure, and layout in order to formulate the comprehensive 16-point CRO/UX audit requested by the user.
+    - Status: IN PROGRESS
+    - Agent Testing Done: N/A (Agent is in an analytical phase).
+    - Which testing method agent to use? N/A (Outputting text roadmap).
+    - User Testing Done: N/A 
+
+**All Pending/In progress Issue list**: 
+  None. The application is highly stable and passed 99.4% of  checks.
+
+**In progress Task List**:
+  Task 1: Generate the CRO/UX Audit Roadmap.
+     - Where to resume: Stop viewing files (you have enough context) and immediately generate the text response addressing all 16 points requested by the user in the last message (Message 131).
+     - What will be achieved with this: Alignment with the user on the next phase of conversion optimization before writing any new code.
+     - Status: IN PROGRESS
+     - Should Test frontend/backend/both after fix? N/A
+     - Blocked on something: None.
+
+**Upcoming and Future Tasks**:
+  P0: Implement the CRO Roadmap (Hero repacking, CTA unification, Pricing overhaul, Trust layer improvements) once the user approves the audit.
+  P1: Enhance the Demo flow (live chat simulations, advanced use cases) and setup Telegram webhooks for leads.
+  P2: Build out the remaining 5 niche pages (clinic, auto, food, real-estate, retail), Cases pages, and full Blog articles.
+
+**Completed work in this session**:
+- Implemented FastAPI backend SSR architecture ().
+- Configured robust i18n via Python dictionaries (, ).
+- Designed and built all MVP templates (Home, Solutions, Pricing, Demo, Contact, About, Privacy, Terms) with Jinja2.
+- Created  endpoint (MongoDB integration, rate limiting, UTM/referrer capture).
+- Executed Design V2 Patch: Migrated from cyan/teal to a premium Copper (#C47C3C) & Monochrome palette via Tailwind CLI.
+- Fixed DE localization (proper umlauts: ü, ä, ö, ß).
+- Built advanced SEO layer: Hreflang, canonicals, breadcrumbs, JSON-LD schema (Organization, SoftwareApp, FAQPage, Article), and generated custom OG Images.
+
+**Earlier issues found/mentioned but not fixed**:
+   - None. (Previous Jinja2 dict issues where keys like  or  caused conflicts were completely resolved by renaming keys to , , etc.)
+
+**Known issue recurrence from previous fork**:
+  - Recurrence count: 0 (This is the initial session).
+  - Status: N/A
+
+**Code Architecture**:
+
+
+**Key Technical Concepts**:
+FastAPI, Jinja2 (Strict SSR), Vanilla JS (Progressive enhancement/Islands), Tailwind CSS (CLI build), MongoDB (Lead storage), i18n via dynamic routing, SEO Schema mapping.
+
+**key DB schema**:
+  - : {name, phone_or_email, message, page_url, lang, timestamp, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, lead_type}
+
+**changes in tech stack**:
+- Option A was selected: NO React SPA. Strictly FastAPI + Jinja2 + Tailwind. 
+- Using Tailwind CLI for building CSS instead of CDN for performance.
+
+**All files of reference**:
+  - 
+  -  &  (Text content)
+  -  & 
+  - 
+  - 
+
+**Areas that need refactoring**:
+  - Templates (, ) will require heavy structural updates once the CRO Roadmap is approved.
+
+**key api endpoints**:
+  -  (Language chooser - x-default)
+  -  (Localized Home)
+  - , , 
+  -  (Form capture)
+
+**Critical Info for New Agent**:
+- **DO NOT WRITE CODE in your first response.** The user (acting as a CRO/UX Director) explicitly requested a structured 16-point CRO Audit Roadmap (Executive Summary, Hypotheses, Block Diagnostics, etc.). You must output this text document first.
+- **Jinja2 Constraint:** Never use dictionary keys named , , ,  in the  dictionaries. They conflict with Python's built-in dict methods when rendered in Jinja2.
+- Tailwind must be compiled via bash: yarn run v1.22.22
+$ /app/frontend/node_modules/.bin/tailwindcss -i ./src/input.css -o ../backend/static/css/style.css --minify
+Done in 1.71s.
+
+**documents and test reports created in this job**:
+  - /app/memory/PRD.md
+  - /app/test_reports/iteration_1.json
+  - /app/test_reports/iteration_2.json
+
+**Last 10 User Messages and any pending HUMAN messages**:
+ - *Message 131*: User acts as CRO Director. Requests a highly detailed, 16-point CRO/UX/Marketing audit and roadmap (NO CODE YET). **[PENDING]**
+ - *Message 130*: Agent finishes Design V2 overhaul.
+ - *Message 70*: User requests Design System v2 (Copper/Monochrome), CRO upgrades, DE-localization fixes, and UTM tracking. **[COMPLETED]**
+ - *Message 69*: Agent finishes MVP Phase 1.
+ - *Message 7*: User approves MVP roadmap but adds 7 constraints (Language URL strictly, CLI Tailwind, Server-side forms, Anti-spam). **[COMPLETED]**
+
+**Project Health Check:**
+All systems operational. (No broken or mocked critical features).
+
+**3rd Party Integrations**:
+ - Gemini Nano Banana (Image Generation) — uses Emergent LLM Key (Used to generate OG Image).
+
+**Testing status**:
+  - Testing agent used after significant changes: YES ( and  passed with 99.4%).
+  - Troubleshoot agent used after agent stuck in loop: NO.
+  - Test files created: None explicitly created by main agent.
+  - Known regressions: None.
+
+**Credentials to test flow**:
+  None required currently.
+
+**What agent forgot to execute**:
+The agent paused successfully to read the content files for the CRO audit but has not yet generated the actual text response to the user's massive prompt. Ensure you generate this 16-point audit immediately.</analysis>
